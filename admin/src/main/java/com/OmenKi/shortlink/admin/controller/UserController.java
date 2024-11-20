@@ -1,5 +1,6 @@
 package com.OmenKi.shortlink.admin.controller;
 
+import com.OmenKi.shortlink.admin.common.convention.result.Result;
 import com.OmenKi.shortlink.admin.dto.resp.UserRespDTO;
 import com.OmenKi.shortlink.admin.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,10 @@ public class UserController {
      * @return
      */
     @GetMapping("/api/shortlink/v1/user/{username}")
-    public UserRespDTO getUserByUsername(@PathVariable("username") String username){
-        return userService.getUserByUsername(username);
+    public Result<UserRespDTO> getUserByUsername(@PathVariable("username") String username){
+        Result<UserRespDTO> userRespDTOResult = new Result<UserRespDTO>();
+        userRespDTOResult.setCode("0");
+        userRespDTOResult.setData(userService.getUserByUsername(username));
+        return userRespDTOResult;
     }
 }

@@ -12,9 +12,12 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.redisson.api.RBloomFilter;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import static com.OmenKi.shortlink.admin.common.constants.RedisCacheConstant.LOCK_USER_REGISTER_KEY;
 import static com.OmenKi.shortlink.admin.common.enums.UserErrorCodeEnum.USER_NAME_EXIST;
 import static com.OmenKi.shortlink.admin.common.enums.UserErrorCodeEnum.USER_SAVE_ERROR;
 
@@ -28,6 +31,7 @@ import static com.OmenKi.shortlink.admin.common.enums.UserErrorCodeEnum.USER_SAV
 public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements UserService {
 
     private final RBloomFilter<String> userRegisterCachePenetrationBloomFilter;
+    private final RedissonClient redissonClient;
     @Override
     public UserRespDTO getUserByUsername(String username) {
         LambdaQueryWrapper<UserDO> queryWrapper = Wrappers.lambdaQuery(UserDO.class)
@@ -54,12 +58,23 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         if(hasUserName(requestParam.getUsername())){
             throw new ClientException(USER_NAME_EXIST);
         }
-        int inserted = baseMapper.insert(BeanUtil.toBean(requestParam, UserDO.class));
-        if (inserted < 1){
-            throw new ClientException(USER_SAVE_ERROR);
-        }
+        // 通过分布式锁方式防止海量用户恶意触发同一个未注册名字请求
+        RLock lock = redissonClient.getLock(LOCK_USER_REGISTER_KEY + requestParam.getUsername());
+       try {
+           if(lock.tryLock()){
+               int inserted = baseMapper.insert(BeanUtil.toBean(requestParam, UserDO.class));
+               if (inserted < 1){
+                   throw new ClientException(USER_SAVE_ERROR);
+               }
 
-        //布隆过滤器加入名字
-        userRegisterCachePenetrationBloomFilter.add(requestParam.getUsername());
+               //布隆过滤器加入名字
+               userRegisterCachePenetrationBloomFilter.add(requestParam.getUsername());
+               return;
+           }
+            throw new ClientException(USER_NAME_EXIST);
+       } finally {
+           lock.unlock();
+       }
+
     }
 }

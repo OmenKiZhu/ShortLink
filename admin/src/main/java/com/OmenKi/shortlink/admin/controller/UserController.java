@@ -1,6 +1,9 @@
 package com.OmenKi.shortlink.admin.controller;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.OmenKi.shortlink.admin.common.convention.result.Result;
+import com.OmenKi.shortlink.admin.common.convention.result.Results;
+import com.OmenKi.shortlink.admin.dto.resp.UserActualRespDTO;
 import com.OmenKi.shortlink.admin.dto.resp.UserRespDTO;
 import com.OmenKi.shortlink.admin.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -31,5 +34,16 @@ public class UserController {
         userRespDTOResult.setCode("0");
         userRespDTOResult.setData(userService.getUserByUsername(username));
         return userRespDTOResult;
+    }
+
+    /**
+     * 根据用户名查询用户无脱敏信息
+     * @param username
+     * @return
+     */
+    @GetMapping("/api/shortlink/v1/actual/user/{username}")
+    public Result<UserActualRespDTO> getActualUserByUsername(@PathVariable("username") String username){
+        //  BeanUtil.toBean 方法将返回的对象转换为 UserActualRespDTO 类型
+        return Results.success(BeanUtil.toBean(userService.getUserByUsername(username), UserActualRespDTO.class));
     }
 }

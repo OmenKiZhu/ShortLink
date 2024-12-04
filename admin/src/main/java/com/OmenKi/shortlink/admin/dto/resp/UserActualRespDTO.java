@@ -1,17 +1,14 @@
 package com.OmenKi.shortlink.admin.dto.resp;
 
-import com.OmenKi.shortlink.admin.common.serialize.PhoneDesensitizationSerializer;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 
 /**
  * @Author: Masin_Zhu
- * @Date: 2024/11/20
- * @Description: 用户返回参数响应
+ * @Date: 2024/12/4
+ * @Description: 真实化的用户对象
  */
 @Data
-public class UserRespDTO {
-
+public class UserActualRespDTO {
     /**
      * id
      */
@@ -31,7 +28,6 @@ public class UserRespDTO {
     /**
      * 手机号
      */
-    @JsonSerialize(using = PhoneDesensitizationSerializer.class)
     private String phone;
 
     /**

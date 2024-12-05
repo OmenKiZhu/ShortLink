@@ -1,8 +1,10 @@
 package com.OmenKi.shortlink.admin.service;
 
 import com.OmenKi.shortlink.admin.dao.entity.UserDO;
+import com.OmenKi.shortlink.admin.dto.req.UserLoginReqDTO;
 import com.OmenKi.shortlink.admin.dto.req.UserRegisterReqDTO;
 import com.OmenKi.shortlink.admin.dto.req.UserUpdateReqDTO;
+import com.OmenKi.shortlink.admin.dto.resp.UserLoginRespDTO;
 import com.OmenKi.shortlink.admin.dto.resp.UserRespDTO;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -39,4 +41,18 @@ public interface UserService extends IService<UserDO> {
      * @param requestParam
      */
     void update(UserUpdateReqDTO requestParam);
+
+    /**
+     * 用户登录
+     * @param requestParam
+     * @return
+     */
+    UserLoginRespDTO login(UserLoginReqDTO requestParam);
+
+    /**
+     * 检测用户是否登录
+     * @param token
+     * @return
+     */
+    Boolean checkLogin(String username,String token);
 }

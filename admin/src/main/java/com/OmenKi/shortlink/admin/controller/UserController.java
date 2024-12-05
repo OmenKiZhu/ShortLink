@@ -3,9 +3,11 @@ package com.OmenKi.shortlink.admin.controller;
 import cn.hutool.core.bean.BeanUtil;
 import com.OmenKi.shortlink.admin.common.convention.result.Result;
 import com.OmenKi.shortlink.admin.common.convention.result.Results;
+import com.OmenKi.shortlink.admin.dto.req.UserLoginReqDTO;
 import com.OmenKi.shortlink.admin.dto.req.UserRegisterReqDTO;
 import com.OmenKi.shortlink.admin.dto.req.UserUpdateReqDTO;
 import com.OmenKi.shortlink.admin.dto.resp.UserActualRespDTO;
+import com.OmenKi.shortlink.admin.dto.resp.UserLoginRespDTO;
 import com.OmenKi.shortlink.admin.dto.resp.UserRespDTO;
 import com.OmenKi.shortlink.admin.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -72,5 +74,21 @@ public class UserController {
     public Result<Void> updateUser(@RequestBody UserUpdateReqDTO requestParam){
         userService.update(requestParam);
         return Results.success();
+    }
+
+    /**
+     * 用户登录
+     * @param requestParam
+     * @return
+     */
+    @PostMapping("/api/short-link/v1/user/login")
+    public Result<UserLoginRespDTO> login(@RequestBody UserLoginReqDTO requestParam){
+        UserLoginRespDTO userLoginRespDTO = userService.login(requestParam);
+        return Results.success(userLoginRespDTO);
+    }
+
+    @GetMapping("/api/short-link/v1/user/check-login")
+    public Result<Boolean> checkLogin(@RequestParam String username,@RequestParam String token){
+        return Results.success(userService.checkLogin(username,token));
     }
 }

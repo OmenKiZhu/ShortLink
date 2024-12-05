@@ -2,6 +2,7 @@ package com.OmenKi.shortlink.admin.service;
 
 import com.OmenKi.shortlink.admin.dao.entity.UserDO;
 import com.OmenKi.shortlink.admin.dto.req.UserRegisterReqDTO;
+import com.OmenKi.shortlink.admin.dto.req.UserUpdateReqDTO;
 import com.OmenKi.shortlink.admin.dto.resp.UserRespDTO;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -31,4 +32,11 @@ public interface UserService extends IService<UserDO> {
      * @param requestParam 注册用户请求参数
      */
     void register(UserRegisterReqDTO requestParam);
+
+    /**
+     * 根据用户名修改用户
+     * @param requestParam 修改用户请求参数
+     * @param requestParam
+     */
+    void update(UserUpdateReqDTO requestParam);
 }

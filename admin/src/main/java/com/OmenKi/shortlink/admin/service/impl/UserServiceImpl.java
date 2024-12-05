@@ -5,9 +5,11 @@ import com.OmenKi.shortlink.admin.common.convention.exception.ClientException;
 import com.OmenKi.shortlink.admin.dao.entity.UserDO;
 import com.OmenKi.shortlink.admin.dao.mapper.UserMapper;
 import com.OmenKi.shortlink.admin.dto.req.UserRegisterReqDTO;
+import com.OmenKi.shortlink.admin.dto.req.UserUpdateReqDTO;
 import com.OmenKi.shortlink.admin.dto.resp.UserRespDTO;
 import com.OmenKi.shortlink.admin.service.UserService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -76,5 +78,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
            lock.unlock();
        }
 
+    }
+
+    @Override
+    public void update(UserUpdateReqDTO requestParam) {
+        // TODO 验证当前登录的用户名跟请求的用户名是否一致
+        LambdaUpdateWrapper<UserDO> updateWrapper = Wrappers.lambdaUpdate(UserDO.class)
+                .eq(UserDO::getUsername, requestParam.getUsername());
+        baseMapper.update(BeanUtil.toBean(requestParam, UserDO.class),updateWrapper);
     }
 }

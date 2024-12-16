@@ -1,6 +1,7 @@
 package com.OmenKi.shortlink.admin.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.OmenKi.shortlink.admin.common.biz.user.UserContext;
 import com.OmenKi.shortlink.admin.dao.entity.GroupDO;
 import com.OmenKi.shortlink.admin.dao.mapper.GroupMapper;
 import com.OmenKi.shortlink.admin.dto.resp.ShortLinkGroupRespDTO;
@@ -43,7 +44,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
         // TODO 获取用户名
         LambdaQueryWrapper<GroupDO> queryWrapper = Wrappers.lambdaQuery(GroupDO.class)
                 .eq(GroupDO::getDelFlag, 0)
-                .eq(GroupDO::getUsername, "OmenKi")
+                .eq(GroupDO::getUsername, UserContext.getUsername())
                 .orderByDesc(GroupDO::getSortOrder, GroupDO::getUpdateTime);
 
         List<GroupDO> groupDOList = baseMapper.selectList(queryWrapper);
@@ -55,7 +56,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
         LambdaQueryWrapper<GroupDO> queryWrapper = Wrappers.lambdaQuery(GroupDO.class)
                 .eq(GroupDO::getGid, gid)
                 // todo: 设置用户名
-                .eq(GroupDO::getUsername, null);
+                .eq(GroupDO::getUsername, UserContext.getUsername());
         GroupDO hasGroupFlag = baseMapper.selectOne(queryWrapper);
         return hasGroupFlag == null;
     }

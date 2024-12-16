@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.OmenKi.shortlink.admin.common.biz.user.UserContext;
 import com.OmenKi.shortlink.admin.dao.entity.GroupDO;
 import com.OmenKi.shortlink.admin.dao.mapper.GroupMapper;
+import com.OmenKi.shortlink.admin.dto.req.ShortLinkGroupUpdateReqDTO;
 import com.OmenKi.shortlink.admin.dto.resp.ShortLinkGroupRespDTO;
 import com.OmenKi.shortlink.admin.service.GroupService;
 import com.OmenKi.shortlink.admin.toolkit.RandomStringGenerator;
@@ -51,6 +52,18 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
 
         return BeanUtil.copyToList(groupDOList, ShortLinkGroupRespDTO.class);
     }
+
+    @Override
+    public void updateGroup(ShortLinkGroupUpdateReqDTO requestParam) {
+        LambdaQueryWrapper<GroupDO> updateWrapper = Wrappers.lambdaQuery(GroupDO.class)
+                .eq(GroupDO::getUsername, UserContext.getUsername())
+                .eq(GroupDO::getGid, requestParam.getGid())
+                .eq(GroupDO::getDelFlag, 0);
+        GroupDO groupDO = new GroupDO();
+        groupDO.setName(requestParam.getName());
+        int update = baseMapper.update(groupDO, updateWrapper);
+    }
+
 
     private boolean hasGid(String gid) {
         LambdaQueryWrapper<GroupDO> queryWrapper = Wrappers.lambdaQuery(GroupDO.class)

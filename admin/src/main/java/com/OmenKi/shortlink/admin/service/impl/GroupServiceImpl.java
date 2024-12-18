@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.OmenKi.shortlink.admin.common.biz.user.UserContext;
 import com.OmenKi.shortlink.admin.dao.entity.GroupDO;
 import com.OmenKi.shortlink.admin.dao.mapper.GroupMapper;
+import com.OmenKi.shortlink.admin.dto.req.ShortLinkGroupSortReqDTO;
 import com.OmenKi.shortlink.admin.dto.req.ShortLinkGroupUpdateReqDTO;
 import com.OmenKi.shortlink.admin.dto.resp.ShortLinkGroupRespDTO;
 import com.OmenKi.shortlink.admin.service.GroupService;
@@ -73,6 +74,21 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
         GroupDO groupDO = new GroupDO();
         groupDO.setDelFlag(1);
         int update = baseMapper.update(groupDO, updateWrapper);
+    }
+
+    @Override
+    public void SortGroup(List<ShortLinkGroupSortReqDTO> requestParam) {
+        requestParam.forEach(each -> {
+            GroupDO groupDO = GroupDO.builder()
+                    .gid(each.getGid())
+                    .sortOrder(each.getSortOrder())
+                    .build();
+            LambdaQueryWrapper<GroupDO> updateWrapper = Wrappers.lambdaQuery(GroupDO.class)
+                    .eq(GroupDO::getUsername, UserContext.getUsername())
+                    .eq(GroupDO::getGid, each.getGid())
+                    .eq(GroupDO::getDelFlag, 0);
+            baseMapper.update(groupDO,updateWrapper);
+        });
     }
 
 

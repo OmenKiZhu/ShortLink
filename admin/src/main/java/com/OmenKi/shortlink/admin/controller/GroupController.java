@@ -3,6 +3,7 @@ package com.OmenKi.shortlink.admin.controller;
 import com.OmenKi.shortlink.admin.common.convention.result.Result;
 import com.OmenKi.shortlink.admin.common.convention.result.Results;
 import com.OmenKi.shortlink.admin.dto.req.ShortLinkGroupSaveReqDTO;
+import com.OmenKi.shortlink.admin.dto.req.ShortLinkGroupSortReqDTO;
 import com.OmenKi.shortlink.admin.dto.req.ShortLinkGroupUpdateReqDTO;
 import com.OmenKi.shortlink.admin.dto.resp.ShortLinkGroupRespDTO;
 import com.OmenKi.shortlink.admin.service.GroupService;
@@ -56,6 +57,12 @@ public class GroupController {
     @DeleteMapping("/api/short-link/v1/group")
     public Result<Void> DeleteGroup(@RequestParam String gid) {
         groupService.deleteGroup(gid);
+        return Results.success();
+    }
+
+    @PostMapping("/api/short-link/v1/group/sort")
+    public Result<Void> SortGroup(@RequestBody List<ShortLinkGroupSortReqDTO> requestParam) {
+        groupService.SortGroup(requestParam);
         return Results.success();
     }
 }

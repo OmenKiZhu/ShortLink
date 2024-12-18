@@ -1,6 +1,7 @@
 package com.OmenKi.shortlink.admin.service;
 
 import com.OmenKi.shortlink.admin.dao.entity.GroupDO;
+import com.OmenKi.shortlink.admin.dto.req.ShortLinkGroupSortReqDTO;
 import com.OmenKi.shortlink.admin.dto.req.ShortLinkGroupUpdateReqDTO;
 import com.OmenKi.shortlink.admin.dto.resp.ShortLinkGroupRespDTO;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -37,4 +38,11 @@ public interface GroupService extends IService<GroupDO> {
      * @param gid
      */
     void deleteGroup(String gid);
+
+    /**
+     * 短链接分组排序
+     *
+     * @param requestParam
+     */
+    void SortGroup(List<ShortLinkGroupSortReqDTO> requestParam);
 }

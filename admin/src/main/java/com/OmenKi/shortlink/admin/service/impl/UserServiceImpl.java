@@ -85,8 +85,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
        } finally {
            lock.unlock();
        }
-
     }
+
 
     @Override
     public void update(UserUpdateReqDTO requestParam) {
@@ -103,6 +103,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
                 .eq(UserDO::getUsername, requestParam.getUsername())
                 .eq(UserDO::getPassword, requestParam.getPassword())
                 .eq(UserDO::getDelFlag, 0);
+
         UserDO userDO = baseMapper.selectOne(loginWrapper);
         if(userDO == null) {
             throw new ClientException("用户不存在");

@@ -1,30 +1,19 @@
-package com.OmenKi.shortlink.project.dao.entity;
+package com.OmenKi.shortlink.project.dto.resp;
 
-import com.OmenKi.shortlink.project.common.database.BaseDO;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 /**
  * @Author: Masin_Zhu
- * @Date: 2024/12/30
- * @Description: 短链接实体
+ * @Date: 2025/1/3
+ * @Description: 分页返回参数
  */
-@TableName("t_link")
 @Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class ShortLinkDO extends BaseDO {
-    /*
-    id 主键
-     */
-    private Long id;
+public class ShortLinkPageRespDTO {
+
+
     /**
      * 域名
      */
@@ -45,25 +34,14 @@ public class ShortLinkDO extends BaseDO {
      */
     private String originUrl;
 
-    /**
-     * 点击量
-     */
-    private Integer clickNum;
+
 
     /**
      * 分组标识
      */
     private String gid;
 
-    /**
-     * 是否启用标识 0:启用 1：未启用
-     */
-    private Integer enableStatus;
 
-    /**
-     * 创建类型 0：接口创建 1：控制台创建
-     */
-    private Integer createType;
 
     /**
      * 有效期类型 0：永久有效 1：自定义有效
@@ -85,6 +63,4 @@ public class ShortLinkDO extends BaseDO {
      * 网站标识
      */
     private String favicon;
-
-
 }

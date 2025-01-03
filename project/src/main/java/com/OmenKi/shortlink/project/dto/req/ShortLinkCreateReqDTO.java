@@ -50,5 +50,5 @@ public class ShortLinkCreateReqDTO {
      * 描述
      */
     @TableField(value = "description")
-    private String describe;
+    private String descriptionAlias;
 }

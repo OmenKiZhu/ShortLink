@@ -1,21 +1,34 @@
-package com.OmenKi.shortlink.project.dto.req;
+package com.OmenKi.shortlink.admin.romote.dto.resp;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.util.Date;
 
 /**
  * @Author: Masin_Zhu
- * @Date: 2024/12/30
- * @Description: 短链接创建请求实体
+ * @Date: 2025/1/3
+ * @Description: 分页返回参数
  */
 @Data
-public class ShortLinkCreateReqDTO {
+public class ShortLinkPageRespDTO {
+
+
     /**
      * 域名
      */
     private String domain;
+
+    /**
+     * 短链接
+     */
+    private String shortUri;
+
+    /**
+     * 完整短链接
+     */
+    private String fullShortUrl;
 
     /**
      * 原始链接
@@ -32,11 +45,6 @@ public class ShortLinkCreateReqDTO {
 
 
     /**
-     * 创建类型 0：接口创建 1：控制台创建
-     */
-    private Integer createType;
-
-    /**
      * 有效期类型 0：永久有效 1：自定义有效
      */
     private Integer validDateType;
@@ -44,12 +52,23 @@ public class ShortLinkCreateReqDTO {
     /**
      * 有效期
      */
-    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date validDate;
+
+    /**
+     * 创建时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date createTime;
 
     /**
      * 描述
      */
     @TableField(value = "description")
     private String descriptionAlias;
+
+    /**
+     * 网站标识
+     */
+    private String favicon;
 }

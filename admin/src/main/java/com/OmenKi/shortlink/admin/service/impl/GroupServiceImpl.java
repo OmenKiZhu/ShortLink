@@ -29,14 +29,17 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
     @Override
     public void saveGroup(String groupName) {
         String gid;
+        String username;
         do {
             gid = RandomStringGenerator.generateRandom();
+            username = UserContext.getUsername();
         } while (!hasGid(gid));
 
         GroupDO groupDO = GroupDO.builder()
                 .gid(gid)
                 .sortOrder(0)
                 .name(groupName)
+                .username(username)
                 .build();
         baseMapper.insert(groupDO);
     }

@@ -4,9 +4,12 @@ import com.OmenKi.shortlink.project.dao.entity.ShortLinkDO;
 import com.OmenKi.shortlink.project.dto.req.ShortLinkCreateReqDTO;
 import com.OmenKi.shortlink.project.dto.req.ShortLinkPageReqDTO;
 import com.OmenKi.shortlink.project.dto.resp.ShortLinkCreateRespDTO;
+import com.OmenKi.shortlink.project.dto.resp.ShortLinkGroupCountQueryRespDTO;
 import com.OmenKi.shortlink.project.dto.resp.ShortLinkPageRespDTO;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * @Author: Masin_Zhu
@@ -27,4 +30,11 @@ public interface ShortLinkService extends IService<ShortLinkDO> {
      * @return
      */
     IPage<ShortLinkPageRespDTO> pageShortLink(ShortLinkPageReqDTO requestParam);
+
+    /**
+     * 分组统计短链接
+     * @param requestParam
+     * @return
+     */
+    List<ShortLinkGroupCountQueryRespDTO> listShortLinkGroupCount(List<String> requestParam);
 }

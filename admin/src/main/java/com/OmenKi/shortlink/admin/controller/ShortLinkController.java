@@ -1,7 +1,7 @@
 package com.OmenKi.shortlink.admin.controller;
 
 import com.OmenKi.shortlink.admin.common.convention.result.Result;
-import com.OmenKi.shortlink.admin.romote.dto.ShortLinkRemoteService;
+import com.OmenKi.shortlink.admin.romote.ShortLinkRemoteService;
 import com.OmenKi.shortlink.admin.romote.dto.req.ShortLinkCreateReqDTO;
 import com.OmenKi.shortlink.admin.romote.dto.req.ShortLinkPageReqDTO;
 import com.OmenKi.shortlink.admin.romote.dto.resp.ShortLinkCreateRespDTO;

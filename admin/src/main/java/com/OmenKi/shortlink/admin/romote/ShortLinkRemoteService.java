@@ -1,4 +1,4 @@
-package com.OmenKi.shortlink.admin.romote.dto;
+package com.OmenKi.shortlink.admin.romote;
 
 import cn.hutool.http.HttpUtil;
 import com.OmenKi.shortlink.admin.common.convention.result.Result;

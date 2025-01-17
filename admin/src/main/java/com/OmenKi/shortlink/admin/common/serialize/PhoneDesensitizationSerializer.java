@@ -13,10 +13,10 @@ import java.io.IOException;
  * @Description: 手机号脱敏反序列化
  */
 public class PhoneDesensitizationSerializer extends JsonSerializer<String> {
-
     @Override
     public void serialize(String phone, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
-        String phoneDesensitization = DesensitizedUtil.mobilePhone(phone); //hutul提供的手机号序列方式
-        jsonGenerator.writeString(phoneDesensitization);
+        String mobilePhoneDesensitizedUtil = DesensitizedUtil.mobilePhone(phone);
+        // 将脱敏后的电话号码写入 JSON 输出流
+        jsonGenerator.writeString(mobilePhoneDesensitizedUtil);
     }
 }

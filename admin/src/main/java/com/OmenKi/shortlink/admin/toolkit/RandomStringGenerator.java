@@ -12,7 +12,11 @@ public final class RandomStringGenerator {
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     private static final SecureRandom random = new SecureRandom();
 
-
+    /**
+     *
+     * 默认生成六位随机字符串
+     * @return
+     */
     public static String generateRandom() {
        return generateRandom(6);
     }

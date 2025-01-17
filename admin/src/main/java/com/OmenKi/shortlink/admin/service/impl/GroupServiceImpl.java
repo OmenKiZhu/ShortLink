@@ -44,8 +44,10 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
     public void saveGroup(String username, String groupName) {
         String gid;
         do {
+            //随机生成6位gid
             gid = RandomStringGenerator.generateRandom();
-        } while (!hasGid(username,gid));
+        } while (hasGid(username,gid)); //直至生成之前不存在的gid
+        //插入一个新的分组
         GroupDO groupDO = GroupDO.builder()
                 .gid(gid)
                 .sortOrder(0)
@@ -118,6 +120,6 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
                 .eq(GroupDO::getGid, gid)
                 .eq(GroupDO::getUsername, Optional.ofNullable(username).orElse(UserContext.getUsername()));
         GroupDO hasGroupFlag = baseMapper.selectOne(queryWrapper);
-        return hasGroupFlag == null;
+        return hasGroupFlag != null;
     }
 }

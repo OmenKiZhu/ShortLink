@@ -1,5 +1,6 @@
 package com.OmenKi.shortlink.admin.dto.resp;
 
+import com.OmenKi.shortlink.admin.common.serialize.MailDesensitizationSerializer;
 import com.OmenKi.shortlink.admin.common.serialize.PhoneDesensitizationSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
@@ -37,5 +38,6 @@ public class UserRespDTO {
     /**
      * 邮箱
      */
+    @JsonSerialize(using = MailDesensitizationSerializer.class)
     private String mail;
 }

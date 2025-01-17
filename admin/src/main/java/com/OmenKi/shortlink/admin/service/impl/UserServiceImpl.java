@@ -61,13 +61,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
 //        UserDO userDO = baseMapper.selectOne(queryWrapper); // 执行查询并返回匹配的第一条记录
 //        return userDO != null;
 
-        //引入布隆后
+        //引入布隆后 不再走库 减轻数据库压力
         return userRegisterCachePenetrationBloomFilter.contains(username);
     }
 
     @Override
     public void register(UserRegisterReqDTO requestParam) {
-        if(hasUserName(requestParam.getUsername())){
+        if(hasUserName(requestParam.getUsername())){ //利用hasName包装布隆过滤的检测方法
             throw new ClientException(USER_NAME_EXIST);
         }
         // 通过分布式锁方式防止海量用户恶意触发同一个未注册名字请求
@@ -86,11 +86,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
 
                //布隆过滤器加入名字
                userRegisterCachePenetrationBloomFilter.add(requestParam.getUsername());
+               //创建新用户的时候自带一个默认分组
                groupService.saveGroup(requestParam.getUsername(),"默认分组");
                return;
+           }else{
+               // 如果未能获取到锁，抛出用户已存在的异常 （多个客户端尝试插入）
+               throw new ClientException(USER_NAME_EXIST);
            }
-            throw new ClientException(USER_NAME_EXIST);
        } finally {
+           // 只有当锁已经被获取时才尝试释放
            lock.unlock();
        }
     }

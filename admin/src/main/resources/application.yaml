@@ -12,3 +12,7 @@ spring:
       host: 127.0.0.1
       port: 6379
       #password: 123456
+  bloom:
+    filter:
+      expected-elements: 100000000
+      false-positive-probability: 0.001

@@ -10,6 +10,8 @@ import com.OmenKi.shortlink.admin.dto.resp.UserActualRespDTO;
 import com.OmenKi.shortlink.admin.dto.resp.UserLoginRespDTO;
 import com.OmenKi.shortlink.admin.dto.resp.UserRespDTO;
 import com.OmenKi.shortlink.admin.service.UserService;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -70,6 +72,11 @@ public class UserController {
         return Results.success();
     }
 
+    /**
+     * 更新用户信息
+     * @param requestParam
+     * @return
+     */
     @PutMapping("/api/short-link/admin/v1/user")
     public Result<Void> updateUser(@RequestBody UserUpdateReqDTO requestParam){
         userService.update(requestParam);
@@ -94,7 +101,10 @@ public class UserController {
      * @return
      */
     @GetMapping("/api/short-link/admin/v1/user/check-login")
-    public Result<Boolean> checkLogin(@RequestParam String username,@RequestParam String token){
+    public Result<Boolean> checkLogin(
+            @RequestParam @NotBlank(message = "Username cannot be empty") @Size(max = 50, message = "Username is too long") String username,
+            @RequestParam @NotBlank(message = "Token cannot be empty") String token
+    ){
         return Results.success(userService.checkLogin(username,token));
     }
 

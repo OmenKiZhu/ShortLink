@@ -2,7 +2,7 @@ package com.OmenKi.shortlink.admin.toolkit;/**
  * @Author: Masin_Zhu
  * @Date: 2025/1/17
  * @Description: 邮箱脱敏工具类
- */public class DesensitizedUtil {
+ */public class EmailDesensitizedUtil {
     /**
      * 对邮箱地址进行脱敏处理，默认保留第一个字符和域名。
      *

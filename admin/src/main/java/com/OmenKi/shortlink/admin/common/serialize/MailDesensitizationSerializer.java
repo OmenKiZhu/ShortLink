@@ -1,7 +1,7 @@
 package com.OmenKi.shortlink.admin.common.serialize;
 
 
-import com.OmenKi.shortlink.admin.toolkit.DesensitizedUtil;
+import com.OmenKi.shortlink.admin.toolkit.EmailDesensitizedUtil;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
@@ -16,7 +16,7 @@ import java.io.IOException;
 public class MailDesensitizationSerializer extends JsonSerializer<String> {
     @Override
     public void serialize(String s, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
-        String mailDesensitizedUtil = DesensitizedUtil.emailWithFirstChar(s);
+        String mailDesensitizedUtil = EmailDesensitizedUtil.emailWithFirstChar(s);
         // 将脱敏后的电话号码写入 JSON 输出流
         jsonGenerator.writeString(mailDesensitizedUtil);
     }

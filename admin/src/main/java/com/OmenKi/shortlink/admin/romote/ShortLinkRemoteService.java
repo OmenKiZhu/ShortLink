@@ -4,6 +4,7 @@ import cn.hutool.http.HttpUtil;
 import com.OmenKi.shortlink.admin.common.convention.result.Result;
 import com.OmenKi.shortlink.admin.romote.dto.req.ShortLinkCreateReqDTO;
 import com.OmenKi.shortlink.admin.romote.dto.req.ShortLinkPageReqDTO;
+import com.OmenKi.shortlink.admin.romote.dto.req.ShortLinkUpdateReqDTO;
 import com.OmenKi.shortlink.admin.romote.dto.resp.ShortLinkCreateRespDTO;
 import com.OmenKi.shortlink.admin.romote.dto.resp.ShortLinkGroupCountQueryRespDTO;
 import com.OmenKi.shortlink.admin.romote.dto.resp.ShortLinkPageRespDTO;
@@ -59,6 +60,14 @@ public interface ShortLinkRemoteService {
         String ResultPageJsonStr = HttpUtil.get("http://127.0.0.1:8001/api/short-link/v1/count", requestMap);
 
         return JSON.parseObject(ResultPageJsonStr, new TypeReference<Result<List<ShortLinkGroupCountQueryRespDTO>>>() {});
+    }
+
+    /**
+     * 更新短连接信息
+      * @param requestParam
+     */
+    default void updateShortLink(ShortLinkUpdateReqDTO requestParam){
+      HttpUtil.post("http://127.0.0.1:8001/api/short-link/v1/update", JSON.toJSONString(requestParam));
     }
 
 }

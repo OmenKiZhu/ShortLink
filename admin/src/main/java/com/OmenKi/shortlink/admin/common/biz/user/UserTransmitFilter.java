@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
 import java.io.IOException;
@@ -24,14 +25,16 @@ import static com.OmenKi.shortlink.admin.common.enums.UserErrorCodeEnum.USER_TOK
  * @Date: 2024/12/16
  * @Description:
  */
+
 @RequiredArgsConstructor
+@Slf4j
 public class UserTransmitFilter implements Filter{
 
     private final StringRedisTemplate stringRedisTemplate;
 
     private static final List<String> IGNORE_URI = Lists.newArrayList(
-            "/api/short-link/v1/user/login",
-            "/api/short-link/admin/v1/user/has-username"
+            "/api/short-link/admin/v1/user/login", //用户登录
+            "/api/short-link/admin/v1/user/has-username" //查询用户名是否已经存在
 
     );
 
@@ -40,6 +43,7 @@ public class UserTransmitFilter implements Filter{
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         String requestURI = httpServletRequest.getRequestURI();
+        //对于不处于忽略连接的进行 线程池set的操作
         if (!IGNORE_URI.contains(requestURI)) {
             String method = httpServletRequest.getMethod();
             if(!(Objects.equals(requestURI, "/api/short-link/admin/v1/user") && Objects.equals(method, "POST"))) {
@@ -51,6 +55,7 @@ public class UserTransmitFilter implements Filter{
                 }
                 Object userInfoJsonStr = null;
                 try {
+                    log.info("username和token的检测通过，接下来从redis中获取用户信息----");
                     userInfoJsonStr = stringRedisTemplate.opsForHash().get("login_" + username, token);
                     if (userInfoJsonStr == null) {
                         throw new ClientException(USER_TOKEN_FAIL);
@@ -59,6 +64,8 @@ public class UserTransmitFilter implements Filter{
                     returnJson((HttpServletResponse) servletResponse, JSON.toJSONString(Results.failure(new ClientException(USER_TOKEN_FAIL))));
                     return;
                 }
+
+                log.info("获取用户信息Json成功，存入到UserContext中---");
                 UserInfoDTO userInfoDTO = JSON.parseObject(userInfoJsonStr.toString(), UserInfoDTO.class);
                 UserContext.setUser(userInfoDTO);
             }

@@ -3,6 +3,7 @@ package com.OmenKi.shortlink.project.service;
 import com.OmenKi.shortlink.project.dao.entity.ShortLinkDO;
 import com.OmenKi.shortlink.project.dto.req.ShortLinkCreateReqDTO;
 import com.OmenKi.shortlink.project.dto.req.ShortLinkPageReqDTO;
+import com.OmenKi.shortlink.project.dto.req.ShortLinkUpdateReqDTO;
 import com.OmenKi.shortlink.project.dto.resp.ShortLinkCreateRespDTO;
 import com.OmenKi.shortlink.project.dto.resp.ShortLinkGroupCountQueryRespDTO;
 import com.OmenKi.shortlink.project.dto.resp.ShortLinkPageRespDTO;
@@ -37,4 +38,10 @@ public interface ShortLinkService extends IService<ShortLinkDO> {
      * @return
      */
     List<ShortLinkGroupCountQueryRespDTO> listShortLinkGroupCount(List<String> requestParam);
+
+    /**
+     * 更新短链接信息
+     * @param requestParam
+     */
+    void updateShortLink(ShortLinkUpdateReqDTO requestParam);
 }

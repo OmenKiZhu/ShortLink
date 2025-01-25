@@ -17,6 +17,7 @@ import com.OmenKi.shortlink.project.dto.resp.ShortLinkGroupCountQueryRespDTO;
 import com.OmenKi.shortlink.project.dto.resp.ShortLinkPageRespDTO;
 import com.OmenKi.shortlink.project.service.ShortLinkService;
 import com.OmenKi.shortlink.project.toolkit.HashUtil;
+import com.OmenKi.shortlink.project.toolkit.LinkUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
@@ -89,6 +90,15 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                 throw new ServiceException("短链接生成重复");
             }
         }
+        //短连接缓存预热
+        log.info("短链接:{} 预热中---", fullShortLink);
+
+        //默认一个月过期
+        stringRedisTemplate.opsForValue().set(String.format(GOTO_SHORT_LINK_KEY, fullShortLink),
+                requestParam.getOriginUrl(),
+                LinkUtil.getShortLinkCacheValidTime(requestParam.getValidDate()),
+                TimeUnit.MILLISECONDS);
+        log.info("短链接:{} 预热完成---", fullShortLink);
 
         // 误判短链接存在的后续操作
         log.info("短链接新加入布隆过滤器过滤中---");

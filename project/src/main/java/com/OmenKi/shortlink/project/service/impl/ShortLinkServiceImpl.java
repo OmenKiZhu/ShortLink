@@ -40,9 +40,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
-import static com.OmenKi.shortlink.project.common.constants.RedisKeyConstant.GOTO_SHORT_LINK_KEY;
-import static com.OmenKi.shortlink.project.common.constants.RedisKeyConstant.LOCK_GOTO_SHORT_LINK_KEY;
+import static com.OmenKi.shortlink.project.common.constants.RedisKeyConstant.*;
 
 /**
  * @Author: Masin_Zhu
@@ -193,7 +193,20 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
             ((HttpServletResponse) response).sendRedirect(originalLink);
             return;
         }
-        //解决缓存击穿 redis key 失效或者不存在后 大量请求涌入数据库 ---》 引入分布式锁
+        //布隆过滤器判断是否为空（布隆过滤器在短链接创建的到时候就加入进去了）
+        boolean isContained = shortUriCreateCachePenetrationBloomFilter.contains(fullShortUrl);
+        if(!isContained) {
+            return;
+        }
+        String gotoIsNullShortLink = stringRedisTemplate.opsForValue().get(String.format(GOTO_IS_NULL_SHORT_LINK_KEY, fullShortUrl));
+        if(StrUtil.isNotBlank(gotoIsNullShortLink)) {
+            log.info("从redis中获取到该短链接对应的原始链接----");
+            ((HttpServletResponse) response).sendRedirect(gotoIsNullShortLink);
+            return;
+        }
+
+        // n+ 请求准备访问数据库
+        //解决缓存击穿 redis key 失效或者不存在后 大量请求涌入数据库 ---》 引入分布式锁 只让一个请求访问db
 
         //获取到这把锁
         RLock lock = redissonClient.getLock(String.format(LOCK_GOTO_SHORT_LINK_KEY, fullShortUrl));
@@ -210,7 +223,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                     .eq(ShortLinkGotoDO::getFullShortUrl, fullShortUrl);
             ShortLinkGotoDO shortLinkGotoDO = shortLinkGotoMapper.selectOne(gotoDOLambdaQueryWrapper);
             if (shortLinkGotoDO == null) {
-                //TODO 此处要进行封控
+                stringRedisTemplate.opsForValue().set(String.format(GOTO_IS_NULL_SHORT_LINK_KEY, fullShortUrl), "-", 30, TimeUnit.MINUTES);
                 return;
             }
             LambdaQueryWrapper<ShortLinkDO> queryWrapper = Wrappers.lambdaQuery(ShortLinkDO.class)

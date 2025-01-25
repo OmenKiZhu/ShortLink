@@ -14,7 +14,7 @@ public class RedisKeyConstant {
 
     public static final String GOTO_SHORT_LINK_KEY = "short-link_goto_%s"; //这里的%s为  域名+短链接
 
-
+    public static final String GOTO_IS_NULL_SHORT_LINK_KEY = "goto_is_null_short-link_goto_%s"; //这里的%s为  域名+短链接
     /**
      * 短链接跳转锁前缀
      *

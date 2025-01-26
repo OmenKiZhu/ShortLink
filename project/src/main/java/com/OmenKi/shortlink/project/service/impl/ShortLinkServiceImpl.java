@@ -234,6 +234,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                     .eq(ShortLinkGotoDO::getFullShortUrl, fullShortUrl);
             ShortLinkGotoDO shortLinkGotoDO = shortLinkGotoMapper.selectOne(gotoDOLambdaQueryWrapper);
             if (shortLinkGotoDO == null) {
+                //设置个缓存空值，避免缓存穿透
                 stringRedisTemplate.opsForValue().set(String.format(GOTO_IS_NULL_SHORT_LINK_KEY, fullShortUrl), "-", 30, TimeUnit.MINUTES);
                 return;
             }
@@ -246,7 +247,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
             if(shortLinkDO != null) {
                 //判断短链接是否过期
                 if(shortLinkDO.getValidDate() != null && shortLinkDO.getValidDate().before(new Date())) {
-                    //当作没短链接处理
+                    //当作没短链接处理 设置个缓存空值，避免缓存穿透
                     stringRedisTemplate.opsForValue().set(String.format(GOTO_IS_NULL_SHORT_LINK_KEY, fullShortUrl), "-", 30, TimeUnit.MINUTES);
                     return;
                 }

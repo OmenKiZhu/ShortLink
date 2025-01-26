@@ -11,6 +11,7 @@ import com.OmenKi.shortlink.admin.romote.dto.resp.ShortLinkPageRespDTO;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.TypeReference;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.HashMap;
 import java.util.List;
@@ -70,4 +71,15 @@ public interface ShortLinkRemoteService {
       HttpUtil.post("http://127.0.0.1:8001/api/short-link/v1/update", JSON.toJSONString(requestParam));
     }
 
+    /**
+     * 根据URL
+      * @param url
+     * @return
+     */
+    default Result<String> getTitleByUrl(@RequestParam("url") String url){
+        String resultJson = HttpUtil.get("http://127.0.0.1:8001/api/short-link/v1/title?url=" + url);
+        //String jsonStr = HttpUtil.get("http://127.0.0.1:8001/api/short-link/v1/title?url", url);
+        return JSON.parseObject(resultJson, new TypeReference<>() {
+        });
+    }
 }

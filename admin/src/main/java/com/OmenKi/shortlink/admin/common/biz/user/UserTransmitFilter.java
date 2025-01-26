@@ -34,7 +34,8 @@ public class UserTransmitFilter implements Filter{
 
     private static final List<String> IGNORE_URI = Lists.newArrayList(
             "/api/short-link/admin/v1/user/login", //用户登录
-            "/api/short-link/admin/v1/user/has-username" //查询用户名是否已经存在
+            "/api/short-link/admin/v1/user/has-username",//查询用户名是否已经存在
+            "/api/short-link/admin/v1/title"
 
     );
 

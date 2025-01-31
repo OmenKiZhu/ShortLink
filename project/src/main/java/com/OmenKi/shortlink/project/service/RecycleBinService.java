@@ -2,6 +2,9 @@ package com.OmenKi.shortlink.project.service;
 
 import com.OmenKi.shortlink.project.dao.entity.ShortLinkDO;
 import com.OmenKi.shortlink.project.dto.req.RecycleBinSaveReqDTO;
+import com.OmenKi.shortlink.project.dto.req.ShortLinkPageReqDTO;
+import com.OmenKi.shortlink.project.dto.resp.ShortLinkPageRespDTO;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -15,4 +18,11 @@ public interface RecycleBinService extends IService<ShortLinkDO> {
      * @param requestParams
      */
     void saveRecycleBin(RecycleBinSaveReqDTO requestParams);
+
+    /**
+     * 分页查询回收站
+     * @param requestParam
+     * @return
+     */
+    IPage<ShortLinkPageRespDTO> pageShortLink(ShortLinkPageReqDTO requestParam);
 }

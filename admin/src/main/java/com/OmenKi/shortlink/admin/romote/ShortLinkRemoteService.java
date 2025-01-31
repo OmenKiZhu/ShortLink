@@ -2,6 +2,7 @@ package com.OmenKi.shortlink.admin.romote;
 
 import cn.hutool.http.HttpUtil;
 import com.OmenKi.shortlink.admin.common.convention.result.Result;
+import com.OmenKi.shortlink.admin.dto.req.RecycleBinSaveReqDTO;
 import com.OmenKi.shortlink.admin.romote.dto.req.ShortLinkCreateReqDTO;
 import com.OmenKi.shortlink.admin.romote.dto.req.ShortLinkPageReqDTO;
 import com.OmenKi.shortlink.admin.romote.dto.req.ShortLinkUpdateReqDTO;
@@ -82,4 +83,14 @@ public interface ShortLinkRemoteService {
         return JSON.parseObject(resultJson, new TypeReference<>() {
         });
     }
+
+    /**
+     * 保存回收站
+     * @param requestParam
+     * @return
+     */
+    default void saveRecycleBin(RecycleBinSaveReqDTO requestParam){
+        HttpUtil.post("http://127.0.0.1:8001/api/short-link/v1/recycle-bin/save", JSON.toJSONString(requestParam));
+    }
 }
+

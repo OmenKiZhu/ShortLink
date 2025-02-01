@@ -16,3 +16,7 @@ spring:
     filter:
       expected-elements: 100000000
       false-positive-probability: 0.001
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

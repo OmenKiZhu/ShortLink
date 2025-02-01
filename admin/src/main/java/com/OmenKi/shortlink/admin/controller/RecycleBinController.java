@@ -4,8 +4,9 @@ import com.OmenKi.shortlink.admin.common.convention.result.Result;
 import com.OmenKi.shortlink.admin.common.convention.result.Results;
 import com.OmenKi.shortlink.admin.dto.req.RecycleBinSaveReqDTO;
 import com.OmenKi.shortlink.admin.romote.ShortLinkRemoteService;
-import com.OmenKi.shortlink.admin.romote.dto.req.ShortLinkPageReqDTO;
+import com.OmenKi.shortlink.admin.romote.dto.req.ShortLinkRecycleBinPageReqDTO;
 import com.OmenKi.shortlink.admin.romote.dto.resp.ShortLinkPageRespDTO;
+import com.OmenKi.shortlink.admin.service.RecycleBinService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class RecycleBinController {
+    private final RecycleBinService recycleBinService;
+
     //TODO 后续重构为SpringCloud Feign调用
     ShortLinkRemoteService shortLinkRemoteService = new ShortLinkRemoteService(){
 
@@ -43,7 +46,7 @@ public class RecycleBinController {
      * @return
      */
     @GetMapping("/api/short-link/admin/v1/recycle-bin/page")
-    public Result<IPage<ShortLinkPageRespDTO>> pageShortLink(ShortLinkPageReqDTO requestParam) {
-        return shortLinkRemoteService.pageRecycleBinShortLink(requestParam);
+    public Result<IPage<ShortLinkPageRespDTO>> pageShortLink(ShortLinkRecycleBinPageReqDTO requestParam) {
+        return recycleBinService.pageRecycleBinShortLink(requestParam);
     }
 }

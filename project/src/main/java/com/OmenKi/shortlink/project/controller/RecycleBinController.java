@@ -3,7 +3,7 @@ package com.OmenKi.shortlink.project.controller;
 import com.OmenKi.shortlink.project.common.convention.result.Result;
 import com.OmenKi.shortlink.project.common.convention.result.Results;
 import com.OmenKi.shortlink.project.dto.req.RecycleBinSaveReqDTO;
-import com.OmenKi.shortlink.project.dto.req.ShortLinkPageReqDTO;
+import com.OmenKi.shortlink.project.dto.req.ShortLinkRecycleBinPageReqDTO;
 import com.OmenKi.shortlink.project.dto.resp.ShortLinkPageRespDTO;
 import com.OmenKi.shortlink.project.service.RecycleBinService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -40,7 +40,7 @@ public class RecycleBinController {
      * @return
      */
     @GetMapping("/api/short-link/v1/recycle-bin/page")
-    public Result<IPage<ShortLinkPageRespDTO>> pageShortLink(ShortLinkPageReqDTO requestParam) {
+    public Result<IPage<ShortLinkPageRespDTO>> pageShortLink(ShortLinkRecycleBinPageReqDTO requestParam) {
 
         return Results.success(recycleBinService.pageShortLink(requestParam));
     }

@@ -3,6 +3,7 @@ package com.OmenKi.shortlink.project.controller;
 import com.OmenKi.shortlink.project.common.convention.result.Result;
 import com.OmenKi.shortlink.project.common.convention.result.Results;
 import com.OmenKi.shortlink.project.dto.req.RecycleBinRecoverReqDTO;
+import com.OmenKi.shortlink.project.dto.req.RecycleBinRemoveReqDTO;
 import com.OmenKi.shortlink.project.dto.req.RecycleBinSaveReqDTO;
 import com.OmenKi.shortlink.project.dto.req.ShortLinkRecycleBinPageReqDTO;
 import com.OmenKi.shortlink.project.dto.resp.ShortLinkPageRespDTO;
@@ -57,4 +58,15 @@ public class RecycleBinController {
         return Results.success();
     }
 
+
+    /**
+     * 回收站删除短链接功能
+     * @param requestParam
+     * @return
+     */
+    @PostMapping("/api/short-link/v1/recycle-bin/remove")
+    public Result<Void> removeRecycleBin(@RequestBody RecycleBinRemoveReqDTO requestParam) {
+        recycleBinService.removeRecycleBin(requestParam);
+        return Results.success();
+    }
 }

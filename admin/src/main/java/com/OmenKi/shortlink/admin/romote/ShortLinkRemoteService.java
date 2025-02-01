@@ -3,6 +3,7 @@ package com.OmenKi.shortlink.admin.romote;
 import cn.hutool.http.HttpUtil;
 import com.OmenKi.shortlink.admin.common.convention.result.Result;
 import com.OmenKi.shortlink.admin.dto.req.RecycleBinRecoverReqDTO;
+import com.OmenKi.shortlink.admin.dto.req.RecycleBinRemoveReqDTO;
 import com.OmenKi.shortlink.admin.dto.req.RecycleBinSaveReqDTO;
 import com.OmenKi.shortlink.admin.romote.dto.req.ShortLinkCreateReqDTO;
 import com.OmenKi.shortlink.admin.romote.dto.req.ShortLinkPageReqDTO;
@@ -121,5 +122,12 @@ public interface ShortLinkRemoteService {
         HttpUtil.post("http://127.0.0.1:8001/api/short-link/v1/recycle-bin/recover", JSON.toJSONString(requestParam));
     }
 
+    /**
+     * 回收站删除短连接功能
+     * @param requestParam
+     */
+    default void removeRecycleBin(RecycleBinRemoveReqDTO requestParam) {
+        HttpUtil.post("http://127.0.0.1:8001/api/short-link/v1/recycle-bin/remove", JSON.toJSONString(requestParam));
+    }
 }
 

@@ -3,6 +3,7 @@ package com.OmenKi.shortlink.admin.controller;
 import com.OmenKi.shortlink.admin.common.convention.result.Result;
 import com.OmenKi.shortlink.admin.common.convention.result.Results;
 import com.OmenKi.shortlink.admin.dto.req.RecycleBinRecoverReqDTO;
+import com.OmenKi.shortlink.admin.dto.req.RecycleBinRemoveReqDTO;
 import com.OmenKi.shortlink.admin.dto.req.RecycleBinSaveReqDTO;
 import com.OmenKi.shortlink.admin.romote.ShortLinkRemoteService;
 import com.OmenKi.shortlink.admin.romote.dto.req.ShortLinkRecycleBinPageReqDTO;
@@ -59,6 +60,17 @@ public class RecycleBinController {
     @PostMapping("/api/short-link/admin/v1/recycle-bin/recover")
     public Result<Void> recoverRecycleBin(@RequestBody RecycleBinRecoverReqDTO requestParam) {
         shortLinkRemoteService.recoverRecycleBin(requestParam);
+        return Results.success();
+    }
+
+    /**
+     * 回收站删除短链接功能
+     * @param requestParam
+     * @return
+     */
+    @PostMapping("/api/short-link/admin/v1/recycle-bin/remove")
+    public Result<Void> removeRecycleBin(@RequestBody RecycleBinRemoveReqDTO requestParam) {
+        shortLinkRemoteService.removeRecycleBin(requestParam);
         return Results.success();
     }
 }

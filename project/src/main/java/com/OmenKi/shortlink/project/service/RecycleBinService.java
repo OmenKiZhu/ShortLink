@@ -1,6 +1,7 @@
 package com.OmenKi.shortlink.project.service;
 
 import com.OmenKi.shortlink.project.dao.entity.ShortLinkDO;
+import com.OmenKi.shortlink.project.dto.req.RecycleBinRecoverReqDTO;
 import com.OmenKi.shortlink.project.dto.req.RecycleBinSaveReqDTO;
 import com.OmenKi.shortlink.project.dto.req.ShortLinkRecycleBinPageReqDTO;
 import com.OmenKi.shortlink.project.dto.resp.ShortLinkPageRespDTO;
@@ -25,4 +26,10 @@ public interface RecycleBinService extends IService<ShortLinkDO> {
      * @return
      */
     IPage<ShortLinkPageRespDTO> pageShortLink(ShortLinkRecycleBinPageReqDTO requestParam);
+
+    /**
+     * 回收站恢复短链接
+     * @param requestParam
+     */
+    void recoverRecycleBin(RecycleBinRecoverReqDTO requestParam);
 }

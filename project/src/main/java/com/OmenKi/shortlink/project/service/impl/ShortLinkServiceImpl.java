@@ -1,12 +1,16 @@
 package com.OmenKi.shortlink.project.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.date.Week;
 import cn.hutool.core.util.StrUtil;
 import com.OmenKi.shortlink.project.common.convention.exception.ClientException;
 import com.OmenKi.shortlink.project.common.convention.exception.ServiceException;
 import com.OmenKi.shortlink.project.common.enums.ValiDateTypeEnum;
+import com.OmenKi.shortlink.project.dao.entity.LinkAccessStatsDO;
 import com.OmenKi.shortlink.project.dao.entity.ShortLinkDO;
 import com.OmenKi.shortlink.project.dao.entity.ShortLinkGotoDO;
+import com.OmenKi.shortlink.project.dao.mapper.LinkAccessStatsMapper;
 import com.OmenKi.shortlink.project.dao.mapper.ShortLinkGotoMapper;
 import com.OmenKi.shortlink.project.dao.mapper.ShortLinkMapper;
 import com.OmenKi.shortlink.project.dto.req.ShortLinkCreateReqDTO;
@@ -69,6 +73,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
     private final ShortLinkGotoMapper shortLinkGotoMapper;
     private final StringRedisTemplate stringRedisTemplate;
     private final RedissonClient redissonClient;
+    private final LinkAccessStatsMapper linkAccessStatsMapper;
     @Override
     public ShortLinkCreateRespDTO createShortLink(ShortLinkCreateReqDTO requestParam) {
         String shortLinkSuffix = generateSuffix(requestParam);
@@ -212,6 +217,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
         String originalLink = stringRedisTemplate.opsForValue().get(String.format(GOTO_SHORT_LINK_KEY, fullShortUrl));
         if (StrUtil.isNotBlank(originalLink)) {
             log.info("从缓存中获取跳转的原始链接----");
+            shortLinkStats(fullShortUrl, null, request, response);
             ((HttpServletResponse) response).sendRedirect(originalLink);
             return;
         }
@@ -268,10 +274,41 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                     LinkUtil.getShortLinkCacheValidTime(shortLinkDO.getValidDate()),
                     TimeUnit.MILLISECONDS);
             log.info("第一次请求将原始链接存入缓存----");
+            shortLinkStats(fullShortUrl, shortLinkDO.getGid(), request, response);
             ((HttpServletResponse) response).sendRedirect(shortLinkDO.getOriginUrl());
         } finally {
             lock.unlock();
         }
+    }
+
+    private void shortLinkStats(String fullShortUrl, String gid, ServletRequest request, ServletResponse response) {
+       try {
+           if (StrUtil.isBlank(gid)) {
+               LambdaQueryWrapper<ShortLinkGotoDO> queryWrapper = Wrappers.lambdaQuery(ShortLinkGotoDO.class)
+                       .eq(ShortLinkGotoDO::getFullShortUrl, fullShortUrl);
+               ShortLinkGotoDO shortLinkGotoDO = shortLinkGotoMapper.selectOne(queryWrapper);
+               gid = shortLinkGotoDO.getGid();
+           }
+           int hour = DateUtil.hour(new Date(), true); //获取当前小时
+           Week week = DateUtil.dayOfWeekEnum(new Date());  //获取指定日期是星期几
+           int weekValue = week.getValue();
+
+           LinkAccessStatsDO linkAccessStatsDO = LinkAccessStatsDO.builder()
+                   .pv(1)
+                   .uv(1)
+                   .uip(1)
+                   .hour(hour)
+                   .weekday(weekValue)
+                   .fullShortUrl(fullShortUrl)
+                   .gid(gid)
+                   .date(new Date())
+                   .build();
+
+           linkAccessStatsMapper.shortLinkStats(linkAccessStatsDO);
+       } catch (Throwable ex) {
+           log.info("短链接访问量统计异常", ex);
+       }
+
     }
 
 

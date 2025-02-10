@@ -2,6 +2,7 @@ package com.OmenKi.shortlink.project.toolkit;
 
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.Date;
 import java.util.Optional;
@@ -17,6 +18,7 @@ public class LinkUtil {
 
     /**
      * 获取短连接缓存有效期的时间
+     *
      * @param validDate
      * @return 有效期时间戳
      */
@@ -25,5 +27,31 @@ public class LinkUtil {
                 .map(each -> DateUtil.between(each, new Date(), DateUnit.MS))
                 .orElse(DEFAULT_CACHE_VALID_TIME);//默认有效期是一个月
 
+    }
+
+
+    /**
+     * 获取用户访问操作系统
+     *
+     * @param request 请求
+     * @return 访问操作系统
+     */
+    public static String getOs(HttpServletRequest request) {
+        String userAgent = request.getHeader("User-Agent");
+        if (userAgent.toLowerCase().contains("windows")) {
+            return "Windows";
+        } else if (userAgent.toLowerCase().contains("mac")) {
+            return "Mac OS";
+        } else if (userAgent.toLowerCase().contains("linux")) {
+            return "Linux";
+        } else if (userAgent.toLowerCase().contains("unix")) {
+            return "Unix";
+        } else if (userAgent.toLowerCase().contains("android")) {
+            return "Android";
+        } else if (userAgent.toLowerCase().contains("iphone")) {
+            return "iOS";
+        } else {
+            return "Unknown";
+        }
     }
 }

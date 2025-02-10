@@ -11,14 +11,8 @@ import com.OmenKi.shortlink.project.common.constants.ShortLinkConstant;
 import com.OmenKi.shortlink.project.common.convention.exception.ClientException;
 import com.OmenKi.shortlink.project.common.convention.exception.ServiceException;
 import com.OmenKi.shortlink.project.common.enums.ValiDateTypeEnum;
-import com.OmenKi.shortlink.project.dao.entity.LinkAccessStatsDO;
-import com.OmenKi.shortlink.project.dao.entity.LinkLocaleStatsDO;
-import com.OmenKi.shortlink.project.dao.entity.ShortLinkDO;
-import com.OmenKi.shortlink.project.dao.entity.ShortLinkGotoDO;
-import com.OmenKi.shortlink.project.dao.mapper.LinkAccessStatsMapper;
-import com.OmenKi.shortlink.project.dao.mapper.LinkLocaleStatsMapper;
-import com.OmenKi.shortlink.project.dao.mapper.ShortLinkGotoMapper;
-import com.OmenKi.shortlink.project.dao.mapper.ShortLinkMapper;
+import com.OmenKi.shortlink.project.dao.entity.*;
+import com.OmenKi.shortlink.project.dao.mapper.*;
 import com.OmenKi.shortlink.project.dto.req.ShortLinkCreateReqDTO;
 import com.OmenKi.shortlink.project.dto.req.ShortLinkPageReqDTO;
 import com.OmenKi.shortlink.project.dto.req.ShortLinkUpdateReqDTO;
@@ -84,6 +78,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
     private final RedissonClient redissonClient;
     private final LinkAccessStatsMapper linkAccessStatsMapper;
     private final LinkLocaleStatsMapper linkLocaleStatsMapper;
+    private final LinkOsStatsMapper linkOsStatsMapper;
 
     @Value("${short-link.stats.locale.amap-key}")
     private String statsLocaleAmapKey;
@@ -377,6 +372,15 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                        .date(new Date())
                        .build();
                linkLocaleStatsMapper.shortLinkScaleStats(linkLocaleStatsDO);
+
+               LinkOsStatsDO linkOsStatsDO = LinkOsStatsDO.builder()
+                       .os(LinkUtil.getOs((HttpServletRequest) request))
+                       .fullShortUrl(fullShortUrl)
+                       .cnt(1)
+                       .gid(gid)
+                       .date(new Date())
+                       .build();
+               linkOsStatsMapper.shortLinkOsStats(linkOsStatsDO);
            }
 
        } catch (Throwable ex) {

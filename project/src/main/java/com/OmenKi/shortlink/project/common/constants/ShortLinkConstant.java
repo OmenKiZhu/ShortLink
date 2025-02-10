@@ -12,4 +12,9 @@ public class ShortLinkConstant {
 
     //默认有效期
     public static final Long DEFAULT_CACHE_VALID_TIME = 2626560000L;
+
+    /**
+     * 高德获取地区接口地址前缀路径  （https://restapi.amap.com/v3/ip?parameters [GET]）
+     */
+    public static final String AMAP_REMOTE_URL = "https://restapi.amap.com/v3/ip";
 }

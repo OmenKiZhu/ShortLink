@@ -12,7 +12,7 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface LinkAccessStatsMapper extends BaseMapper<LinkAccessStatsDO> {
     /**
-     * 记录基础访问健康新增语句
+     * 记录基础访问新增语句
      * @param linkAccessStatsDO
      */
     @Insert("INSERT INTO t_link_access_stats ("

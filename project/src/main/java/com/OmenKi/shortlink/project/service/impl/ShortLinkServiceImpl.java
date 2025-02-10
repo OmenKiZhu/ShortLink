@@ -56,6 +56,7 @@ import java.net.URL;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static com.OmenKi.shortlink.project.common.constants.RedisKeyConstant.*;
 
@@ -80,6 +81,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
     private final LinkLocaleStatsMapper linkLocaleStatsMapper;
     private final LinkOsStatsMapper linkOsStatsMapper;
     private final LinkBrowserStatsMapper linkBrowserStatsMapper;
+    private final LinkAccessLogsMapper linkAccessLogsMapper;
 
     @Value("${short-link.stats.locale.amap-key}")
     private String statsLocaleAmapKey;
@@ -296,16 +298,18 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
         Cookie[] cookies = ((HttpServletRequest) request).getCookies();
 
        try {
+           AtomicReference<String> uv = new AtomicReference<>();
            Runnable addResponseCookieTask = () -> {
                //request判断不携带uvCookie
                //响应体设置cookie
-               String uv = UUID.fastUUID().toString();
-               Cookie uvCookie = new Cookie("uv", uv);
+               String actualUv = UUID.fastUUID().toString();
+               uv.set(actualUv);
+               Cookie uvCookie = new Cookie("uv", uv.get());
                uvCookie.setMaxAge(60 * 60 * 24 * 30); //过期时间为30天
                uvCookie.setPath(StrUtil.sub(fullShortUrl, fullShortUrl.indexOf("/"), fullShortUrl.length()));
                ((HttpServletResponse) response).addCookie(uvCookie);
                uvFirstFlag.set(Boolean.TRUE);
-               Long added = stringRedisTemplate.opsForSet().add("short-link:stats:uv:" + fullShortUrl, uv);
+               Long added = stringRedisTemplate.opsForSet().add("short-link:stats:uv:" + fullShortUrl, uv.get());
            };
 
            //判断request是否携带cookie
@@ -316,6 +320,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                        .findFirst()
                        .map(Cookie::getValue)
                        .ifPresentOrElse(each -> {
+                           uv.set(each);
                            Long added = stringRedisTemplate.opsForSet().add("short-link:stats:uv:" + fullShortUrl, each);
                            //利用这个flag标识来判断最后是否需要UV+1
                            uvFirstFlag.set(added != null && added > 0L);
@@ -374,23 +379,35 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                        .build();
                linkLocaleStatsMapper.shortLinkScaleStats(linkLocaleStatsDO);
 
+               String os = LinkUtil.getOs((HttpServletRequest) request);
                LinkOsStatsDO linkOsStatsDO = LinkOsStatsDO.builder()
-                       .os(LinkUtil.getOs((HttpServletRequest) request))
+                       .os(os)
                        .fullShortUrl(fullShortUrl)
                        .cnt(1)
                        .gid(gid)
                        .date(new Date())
                        .build();
                linkOsStatsMapper.shortLinkOsStats(linkOsStatsDO);
-
+               String browser = LinkUtil.getBrowser(((HttpServletRequest) request));
                LinkBrowserStatsDO linkBrowserStatsDO = LinkBrowserStatsDO.builder()
-                       .browser(LinkUtil.getBrowser(((HttpServletRequest) request)))
+                       .browser(browser)
                        .cnt(1)
                        .gid(gid)
                        .fullShortUrl(fullShortUrl)
                        .date(new Date())
                        .build();
                linkBrowserStatsMapper.shortLinkBrowserState(linkBrowserStatsDO);
+
+               LinkAccessLogsDO linkAccessLogsDO = LinkAccessLogsDO.builder()
+                       .ip(remoteAddr)
+                       .browser(browser)
+                       .os(os)
+                       .gid(gid)
+                       .fullShortUrl(fullShortUrl)
+                       .user(uv.get())
+                       .build();
+
+               linkAccessLogsMapper.insert(linkAccessLogsDO);
            }
 
        } catch (Throwable ex) {

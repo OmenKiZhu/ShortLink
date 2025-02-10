@@ -2,7 +2,15 @@
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
-
+/target/
+.idea
+classes
+*.iml
+.tags
+.tags_sorted_by_file
+.pyc
+*.class
+target/
 ### Eclipse ###
 .apt_generated
 .classpath

@@ -12,14 +12,14 @@ import java.util.Date;
 /**
  * @Author: Masin_Zhu
  * @Date: 2025/2/10
- * @Description: 地区统计访问实体
+ * @Description: 监测网络类型实体类
  */
 @Data
-@TableName("t_link_locale_stats")
+@TableName("t_link_network_stats")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class LinkLocaleStatsDO extends BaseDO {
+public class LinkNetworkStatsDO extends BaseDO {
     /**
      * id
      */
@@ -46,37 +46,7 @@ public class LinkLocaleStatsDO extends BaseDO {
     private Integer cnt;
 
     /**
-     * 省份名称
+     * 访问网络
      */
-    private String province;
-
-    /**
-     * 城市名称
-     */
-    private String city;
-
-    /**
-     * 城市编码
-     */
-    private String adcode;
-
-    /**
-     * 国家标识
-     */
-    private String country;
-
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 修改时间
-     */
-    private Date updateTime;
-
-    /**
-     * 删除标识 0：未删除 1：已删除
-     */
-    private int delFlag;
+    private String network;
 }

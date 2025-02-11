@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
@@ -14,10 +15,12 @@ import java.util.Date;
  * @Description: 基础访问监控实体
  */
 @Data
-@TableName("t_link_access_stats")
 @Builder
+@NoArgsConstructor
 @AllArgsConstructor
+@TableName("t_link_access_stats")
 public class LinkAccessStatsDO extends BaseDO {
+
     /**
      * id
      */
@@ -44,7 +47,7 @@ public class LinkAccessStatsDO extends BaseDO {
     private Integer pv;
 
     /**
-     * 独立访客人数
+     * 独立访客数
      */
     private Integer uv;
 
@@ -62,19 +65,4 @@ public class LinkAccessStatsDO extends BaseDO {
      * 星期
      */
     private Integer weekday;
-
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 修改时间
-     */
-    private Date updateTime;
-
-    /**
-     * 删除标识 0：未删除 1：已删除
-     */
-    private int delFlag;
 }

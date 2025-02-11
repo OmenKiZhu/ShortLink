@@ -53,10 +53,20 @@ public class LinkAccessLogsDO extends BaseDO {
      */
     private String ip;
 
+    /**
+     * 网络类型
+     */
+    private String network;
 
     /**
-     * 删除标识 0：未删除 1：已删除
+     * 网络设备
      */
-    private int delFlag;
+    private String device;
+
+    /**
+     * 地区
+     */
+    private String locale;
+
 
 }

@@ -6,15 +6,8 @@ import com.OmenKi.shortlink.admin.common.convention.result.Result;
 import com.OmenKi.shortlink.admin.dto.req.RecycleBinRecoverReqDTO;
 import com.OmenKi.shortlink.admin.dto.req.RecycleBinRemoveReqDTO;
 import com.OmenKi.shortlink.admin.dto.req.RecycleBinSaveReqDTO;
-import com.OmenKi.shortlink.admin.romote.dto.req.ShortLinkStatsReqDTO;
-import com.OmenKi.shortlink.admin.romote.dto.resp.ShortLinkStatsRespDTO;
-import com.OmenKi.shortlink.admin.romote.dto.req.ShortLinkCreateReqDTO;
-import com.OmenKi.shortlink.admin.romote.dto.req.ShortLinkPageReqDTO;
-import com.OmenKi.shortlink.admin.romote.dto.req.ShortLinkRecycleBinPageReqDTO;
-import com.OmenKi.shortlink.admin.romote.dto.req.ShortLinkUpdateReqDTO;
-import com.OmenKi.shortlink.admin.romote.dto.resp.ShortLinkCreateRespDTO;
-import com.OmenKi.shortlink.admin.romote.dto.resp.ShortLinkGroupCountQueryRespDTO;
-import com.OmenKi.shortlink.admin.romote.dto.resp.ShortLinkPageRespDTO;
+import com.OmenKi.shortlink.admin.romote.dto.req.*;
+import com.OmenKi.shortlink.admin.romote.dto.resp.*;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.TypeReference;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -141,6 +134,21 @@ public interface ShortLinkRemoteService {
      */
     default Result<ShortLinkStatsRespDTO> oneShortLinkStats(ShortLinkStatsReqDTO requestParam) {
         String resultBodyStr = HttpUtil.get("http://127.0.0.1:8001/api/short-link/v1/stats", BeanUtil.beanToMap(requestParam));
+        return JSON.parseObject(resultBodyStr, new TypeReference<>() {
+        });
+    }
+
+    /**
+     * 访问单个短链接指定时间内监控访问记录数据
+     *
+     * @param requestParam 访问短链接监控记录请求参数
+     * @return 短链接监控记录信息
+     */
+    default Result<IPage<ShortLinkStatsAccessRecordRespDTO>> shortLinkStatsAccessRecord(ShortLinkStatsAccessRecordReqDTO requestParam){
+        Map<String, Object> stringObjectMap = BeanUtil.beanToMap(requestParam, false, true);
+        stringObjectMap.remove("orders");
+        stringObjectMap.remove("records");
+        String resultBodyStr = HttpUtil.get("http://127.0.0.1:8001/api/short-link/v1/access-record", stringObjectMap);
         return JSON.parseObject(resultBodyStr, new TypeReference<>() {
         });
     }

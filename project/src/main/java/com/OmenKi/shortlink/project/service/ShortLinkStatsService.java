@@ -1,7 +1,10 @@
 package com.OmenKi.shortlink.project.service;
 
+import com.OmenKi.shortlink.project.dto.req.ShortLinkStatsAccessRecordReqDTO;
 import com.OmenKi.shortlink.project.dto.req.ShortLinkStatsReqDTO;
+import com.OmenKi.shortlink.project.dto.resp.ShortLinkStatsAccessRecordRespDTO;
 import com.OmenKi.shortlink.project.dto.resp.ShortLinkStatsRespDTO;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 
 /**
  * @Author: Masin_Zhu
@@ -16,4 +19,11 @@ public interface ShortLinkStatsService {
      * @return 短链接监控数据
      */
     ShortLinkStatsRespDTO oneShortLinkStats(ShortLinkStatsReqDTO requestParam);
+
+    /**
+     * 访问单个短链接指定时间内访问记录的监控数据
+     * @param requestParam
+     * @return
+     */
+    IPage<ShortLinkStatsAccessRecordRespDTO> shortLinkStatsAccessRecord(ShortLinkStatsAccessRecordReqDTO requestParam);
 }

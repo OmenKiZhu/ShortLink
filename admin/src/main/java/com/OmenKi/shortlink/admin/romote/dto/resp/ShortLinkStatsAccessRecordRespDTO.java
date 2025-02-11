@@ -1,38 +1,28 @@
-package com.OmenKi.shortlink.project.dao.entity;
+package com.OmenKi.shortlink.admin.romote.dto.resp;
 
-import com.OmenKi.shortlink.project.common.database.BaseDO;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 /**
  * @Author: Masin_Zhu
  * @Date: 2025/2/10
- * @Description: 访问日志监控实体
+ * @Description: 短链接监控访问记录响应参数
  */
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
-@TableName("t_link_access_logs")
-public class LinkAccessLogsDO extends BaseDO {
-    /**
-     * id
-     */
-    private Long id;
+@NoArgsConstructor
+@AllArgsConstructor
+public class ShortLinkStatsAccessRecordRespDTO {
 
     /**
-     * 完整短链接
+     * 访客类型
      */
-    private String fullShortUrl;
-
-    /**
-     * 分组标识
-     */
-    private String gid;
-
+    private String uvType;
 
     /**
      * 浏览器
@@ -43,11 +33,6 @@ public class LinkAccessLogsDO extends BaseDO {
      * 操作系统
      */
     private String os;
-
-    /**
-     * 用户信息
-     */
-    private String user;
 
     /**
      * ip
@@ -69,4 +54,16 @@ public class LinkAccessLogsDO extends BaseDO {
      */
     private String locale;
 
+    /**
+     * 用户信息
+     */
+    private String user;
+
+
+    /**
+     * 访问时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+
+    private Date createTime;
 }

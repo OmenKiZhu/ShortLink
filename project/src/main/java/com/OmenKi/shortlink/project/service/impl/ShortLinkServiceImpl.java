@@ -89,13 +89,19 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
     @Value("${short-link.stats.locale.amap-key}")
     private String statsLocaleAmapKey;
 
+    @Value("${short-link.domain.default}")
+    private String createShortLinkDefaultDomain;
     @Override
     public ShortLinkCreateRespDTO createShortLink(ShortLinkCreateReqDTO requestParam) {
+        //产生链接的后缀
         String shortLinkSuffix = generateSuffix(requestParam);
-        String fullShortLink = requestParam.getDomain() + "/" + shortLinkSuffix;
+
+        String fullShortLink = createShortLinkDefaultDomain + "/" + shortLinkSuffix;
+
         ShortLinkDO shortLinkDO = BeanUtil.toBean(requestParam, ShortLinkDO.class);
         shortLinkDO.setFullShortUrl(fullShortLink);
         shortLinkDO.setShortUri(shortLinkSuffix);
+        shortLinkDO.setDomain(createShortLinkDefaultDomain);
         shortLinkDO.setEnableStatus(0);
         shortLinkDO.setDescriptionAlias(requestParam.getDescriptionAlias());
         shortLinkDO.setFavicon(getFavicon(requestParam.getOriginUrl()));
@@ -235,8 +241,19 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
 
     @Override
     public void restoreUrl(String shortUri, ServletRequest request, ServletResponse response) throws IOException {
+        //获取请求链接的域名
         String serverName = request.getServerName();
-        String fullShortUrl = serverName + "/" + shortUri;
+
+        //拿到请求的端口号(如果请求为80 则设置为“”， 后续跳转到404)
+        String serverPort = Optional.of(request.getServerPort())
+                .filter(each -> !Objects.equals(each, 80))
+                .map(String::valueOf)
+                .map(each -> ":" + each)
+                .orElse("");
+
+        //进行fullShortUrl的拼接
+        String fullShortUrl = serverName + serverPort + "/" + shortUri;
+
         String originalLink = stringRedisTemplate.opsForValue().get(String.format(GOTO_SHORT_LINK_KEY, fullShortUrl));
         if (StrUtil.isNotBlank(originalLink)) {
             log.info("从缓存中获取跳转的原始链接----");

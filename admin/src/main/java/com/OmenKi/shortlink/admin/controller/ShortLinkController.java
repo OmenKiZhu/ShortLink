@@ -15,6 +15,7 @@ import com.OmenKi.shortlink.admin.toolkit.EasyExcelWebUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,6 +26,7 @@ import java.util.List;
  * @Description:
  */
 @RestController
+@Slf4j
 public class ShortLinkController {
     //TODO 后续重构为SpringCloud Feign调用
     ShortLinkRemoteService shortLinkRemoteService = new ShortLinkRemoteService(){
@@ -68,7 +70,9 @@ public class ShortLinkController {
         Result<ShortLinkBatchCreateRespDTO> shortLinkBatchCreateRespDTOResult = shortLinkRemoteService.batchCreateShortLink(requestParam);
         if (shortLinkBatchCreateRespDTOResult.isSuccess()) {
             List<ShortLinkBaseInfoRespDTO> baseLinkInfos = shortLinkBatchCreateRespDTOResult.getData().getBaseLinkInfos();
+            log.info("批量短链接进行中-------------------------");
             EasyExcelWebUtil.write(response, "批量创建短链接-SaaS短链接系统", ShortLinkBaseInfoRespDTO.class, baseLinkInfos);
+            log.info("批量短链接excel文件已经下载完成-------------");
         }
     }
 

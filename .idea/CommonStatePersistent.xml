@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CommonStatePersistent">
-    <option name="searchCache" value="api/short-link/v1/stats" />
+    <option name="searchCache" value="/api/short-link/v1/stats/access-record/group" />
   </component>
 </project>

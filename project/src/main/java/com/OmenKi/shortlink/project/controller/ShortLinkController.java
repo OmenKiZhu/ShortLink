@@ -2,9 +2,11 @@ package com.OmenKi.shortlink.project.controller;
 
 import com.OmenKi.shortlink.project.common.convention.result.Result;
 import com.OmenKi.shortlink.project.common.convention.result.Results;
+import com.OmenKi.shortlink.project.dto.req.ShortLinkBatchCreateReqDTO;
 import com.OmenKi.shortlink.project.dto.req.ShortLinkCreateReqDTO;
 import com.OmenKi.shortlink.project.dto.req.ShortLinkPageReqDTO;
 import com.OmenKi.shortlink.project.dto.req.ShortLinkUpdateReqDTO;
+import com.OmenKi.shortlink.project.dto.resp.ShortLinkBatchCreateRespDTO;
 import com.OmenKi.shortlink.project.dto.resp.ShortLinkCreateRespDTO;
 import com.OmenKi.shortlink.project.dto.resp.ShortLinkGroupCountQueryRespDTO;
 import com.OmenKi.shortlink.project.dto.resp.ShortLinkPageRespDTO;
@@ -42,6 +44,15 @@ public class ShortLinkController {
     public Result<ShortLinkCreateRespDTO> createShortLink(@RequestBody ShortLinkCreateReqDTO requestParam) {
 
         return Results.success(shortLinkService.createShortLink(requestParam));
+    }
+
+    /**
+     * 批量创建短链接
+     */
+    @PostMapping("/api/short-link/v1/create/batch")
+    public Result<ShortLinkBatchCreateRespDTO> batchCreateShortLink(@RequestBody ShortLinkBatchCreateReqDTO requestParam) {
+
+        return Results.success(shortLinkService.batchCreateShortLink(requestParam));
     }
 
     /**

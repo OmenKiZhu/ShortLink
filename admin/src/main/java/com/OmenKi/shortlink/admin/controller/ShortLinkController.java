@@ -3,13 +3,21 @@ package com.OmenKi.shortlink.admin.controller;
 import com.OmenKi.shortlink.admin.common.convention.result.Result;
 import com.OmenKi.shortlink.admin.common.convention.result.Results;
 import com.OmenKi.shortlink.admin.romote.ShortLinkRemoteService;
+import com.OmenKi.shortlink.admin.romote.dto.req.ShortLinkBatchCreateReqDTO;
 import com.OmenKi.shortlink.admin.romote.dto.req.ShortLinkCreateReqDTO;
 import com.OmenKi.shortlink.admin.romote.dto.req.ShortLinkPageReqDTO;
 import com.OmenKi.shortlink.admin.romote.dto.req.ShortLinkUpdateReqDTO;
+import com.OmenKi.shortlink.admin.romote.dto.resp.ShortLinkBaseInfoRespDTO;
+import com.OmenKi.shortlink.admin.romote.dto.resp.ShortLinkBatchCreateRespDTO;
 import com.OmenKi.shortlink.admin.romote.dto.resp.ShortLinkCreateRespDTO;
 import com.OmenKi.shortlink.admin.romote.dto.resp.ShortLinkPageRespDTO;
+import com.OmenKi.shortlink.admin.toolkit.EasyExcelWebUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.SneakyThrows;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @Author: Masin_Zhu
@@ -50,4 +58,18 @@ public class ShortLinkController {
         shortLinkRemoteService.updateShortLink(requestParam);
         return Results.success();
     }
+
+    /**
+     * 批量创建短链接
+     */
+    @SneakyThrows
+    @PostMapping("/api/short-link/admin/v1/create/batch")
+    public void batchCreateShortLink(@RequestBody ShortLinkBatchCreateReqDTO requestParam, HttpServletResponse response) {
+        Result<ShortLinkBatchCreateRespDTO> shortLinkBatchCreateRespDTOResult = shortLinkRemoteService.batchCreateShortLink(requestParam);
+        if (shortLinkBatchCreateRespDTOResult.isSuccess()) {
+            List<ShortLinkBaseInfoRespDTO> baseLinkInfos = shortLinkBatchCreateRespDTOResult.getData().getBaseLinkInfos();
+            EasyExcelWebUtil.write(response, "批量创建短链接-SaaS短链接系统", ShortLinkBaseInfoRespDTO.class, baseLinkInfos);
+        }
+    }
+
 }

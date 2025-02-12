@@ -1,9 +1,11 @@
 package com.OmenKi.shortlink.project.service;
 
 import com.OmenKi.shortlink.project.dao.entity.ShortLinkDO;
+import com.OmenKi.shortlink.project.dto.req.ShortLinkBatchCreateReqDTO;
 import com.OmenKi.shortlink.project.dto.req.ShortLinkCreateReqDTO;
 import com.OmenKi.shortlink.project.dto.req.ShortLinkPageReqDTO;
 import com.OmenKi.shortlink.project.dto.req.ShortLinkUpdateReqDTO;
+import com.OmenKi.shortlink.project.dto.resp.ShortLinkBatchCreateRespDTO;
 import com.OmenKi.shortlink.project.dto.resp.ShortLinkCreateRespDTO;
 import com.OmenKi.shortlink.project.dto.resp.ShortLinkGroupCountQueryRespDTO;
 import com.OmenKi.shortlink.project.dto.resp.ShortLinkPageRespDTO;
@@ -59,4 +61,11 @@ public interface ShortLinkService extends IService<ShortLinkDO> {
      * @param response
      */
     void restoreUrl(String shortUri, ServletRequest request, ServletResponse response) throws IOException;
+
+    /**
+     * 批量创建短链接
+     * @param requestParam
+     * @return
+     */
+    ShortLinkBatchCreateRespDTO batchCreateShortLink(ShortLinkBatchCreateReqDTO requestParam);
 }

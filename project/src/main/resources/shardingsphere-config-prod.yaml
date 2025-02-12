@@ -32,6 +32,14 @@ rules:
             shardingColumn: full_short_url
             # 分片算法，对应 rules[0].shardingAlgorithms
             shardingAlgorithmName: link_goto_table_hash_mod   # 分片算法
+    t_link_stats_today:
+      actualDataNodes: ds_0.t_link_stats_today_${0..15}
+      tableStrategy:
+        standard:
+          shardingColumn: gid
+          shardingAlgorithmName: link_stats_today_hash_mod
+      bindingTables:
+        - t_link, t_link_stats_today
     shardingAlgorithms:
       # 数据表分片算法
       link_table_hash_mod:
@@ -45,6 +53,11 @@ rules:
         # 根据分片键 Hash 分片
         type: HASH_MOD
         # 分片数量
+        props:
+          sharding-count: 16
+      # 数据表分片算法
+      link_stats_today_hash_mod:
+        type: HASH_MOD
         props:
           sharding-count: 16
   # 展现逻辑 SQL & 真实 SQL

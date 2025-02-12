@@ -2,6 +2,7 @@ package com.OmenKi.shortlink.project.dao.entity;
 
 import com.OmenKi.shortlink.project.common.database.BaseDO;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -39,6 +40,7 @@ public class LinkAccessStatsDO extends BaseDO {
     /**
      * 日期
      */
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date date;
 
     /**

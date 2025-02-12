@@ -22,6 +22,7 @@ import java.util.Map;
  * @Date: 2025/1/7
  * @Description: 短链接中台远程调用服务
  */
+
 public interface ShortLinkRemoteService {
     /**
      * 创建短链接
@@ -135,6 +136,10 @@ public interface ShortLinkRemoteService {
      */
     default Result<ShortLinkStatsRespDTO> oneShortLinkStats(ShortLinkStatsReqDTO requestParam) {
         String resultBodyStr = HttpUtil.get("http://127.0.0.1:8001/api/short-link/v1/stats", BeanUtil.beanToMap(requestParam));
+
+        // 定义日期格式
+        System.out.println(resultBodyStr);
+
         return JSON.parseObject(resultBodyStr, new TypeReference<>() {
         });
     }

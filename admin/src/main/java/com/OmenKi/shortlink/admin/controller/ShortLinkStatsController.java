@@ -2,6 +2,7 @@ package com.OmenKi.shortlink.admin.controller;
 
 import com.OmenKi.shortlink.admin.common.convention.result.Result;
 import com.OmenKi.shortlink.admin.romote.ShortLinkRemoteService;
+import com.OmenKi.shortlink.admin.romote.dto.req.ShortLinkGroupStatsReqDTO;
 import com.OmenKi.shortlink.admin.romote.dto.req.ShortLinkStatsAccessRecordReqDTO;
 import com.OmenKi.shortlink.admin.romote.dto.req.ShortLinkStatsReqDTO;
 import com.OmenKi.shortlink.admin.romote.dto.resp.ShortLinkStatsAccessRecordRespDTO;
@@ -43,4 +44,13 @@ public class ShortLinkStatsController {
     public Result<IPage<ShortLinkStatsAccessRecordRespDTO>> shortLinkStatsAccessRecord(ShortLinkStatsAccessRecordReqDTO requestParam) {
         return shortLinkRemoteService.shortLinkStatsAccessRecord(requestParam);
     }
+
+    /**
+     * 访问分组短链接指定时间内监控数据
+     */
+    @GetMapping("/api/short-link/admin/v1/stats/group")
+    public Result<ShortLinkStatsRespDTO> groupShortLinkStats(ShortLinkGroupStatsReqDTO requestParam) {
+        return shortLinkRemoteService.groupShortLinkStats(requestParam);
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.OmenKi.shortlink.project.service;
 
+import com.OmenKi.shortlink.project.dto.req.ShortLinkGroupStatsReqDTO;
 import com.OmenKi.shortlink.project.dto.req.ShortLinkStatsAccessRecordReqDTO;
 import com.OmenKi.shortlink.project.dto.req.ShortLinkStatsReqDTO;
 import com.OmenKi.shortlink.project.dto.resp.ShortLinkStatsAccessRecordRespDTO;
@@ -26,4 +27,12 @@ public interface ShortLinkStatsService {
      * @return
      */
     IPage<ShortLinkStatsAccessRecordRespDTO> shortLinkStatsAccessRecord(ShortLinkStatsAccessRecordReqDTO requestParam);
+
+    /**
+     * 获取分组短链接监控数据
+     *
+     * @param requestParam 获取分组短链接监控数据入参
+     * @return 分组短链接监控数据
+     */
+    ShortLinkStatsRespDTO groupShortLinkStats(ShortLinkGroupStatsReqDTO requestParam);
 }

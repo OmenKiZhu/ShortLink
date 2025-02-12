@@ -16,6 +16,7 @@ import java.util.List;
  * @Description: 操作系统获取的持久层
  */
 public interface LinkOsStatsMapper extends BaseMapper<LinkOsStatsDO> {
+
     @Insert("INSERT INTO t_link_os_stats ("
             + "  full_short_url, gid, date, cnt, os, create_time, update_time, del_flag"
             + ") VALUES ("

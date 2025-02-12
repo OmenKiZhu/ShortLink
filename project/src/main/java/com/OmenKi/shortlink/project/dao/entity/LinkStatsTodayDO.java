@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
@@ -17,6 +18,7 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 @TableName("t_link_stats_today")
+@NoArgsConstructor
 public class LinkStatsTodayDO extends BaseDO {
     /**
      * id

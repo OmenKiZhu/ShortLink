@@ -26,9 +26,14 @@ public class ShortLinkUpdateReqDTO {
     private String fullShortUrl;
 
     /**
-     * 分组标识
+     * 想要修改后的分组标识
      */
     private String gid;
+
+    /**
+     * 原始分组标识
+     */
+    private String originGid;
 
 
     /**

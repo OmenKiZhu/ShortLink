@@ -78,7 +78,8 @@ public class ShortLinkController {
     }
 
     /**
-     * 查询短链接分组下的数量
+     * 分组统计短链接
+     * @param requestParam
      * @return
      */
     @GetMapping("/api/short-link/v1/count")

@@ -28,7 +28,7 @@ public interface LinkLocaleStatsMapper extends BaseMapper<LinkLocaleStatsDO> {
             + ") ON DUPLICATE KEY UPDATE "
             + "  cnt = cnt + #{linkLocaleStats.cnt};")
 
-    void shortLinkScaleStats(@Param("linkLocaleStats") LinkLocaleStatsDO linkLocaleStatsDO);
+    void shortLinkLocaleStats(@Param("linkLocaleStats") LinkLocaleStatsDO linkLocaleStatsDO);
 
     /**
      * 根据短链接获取指定日期内基础监控数据

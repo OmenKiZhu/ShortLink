@@ -112,7 +112,7 @@ public class LinkUtil {
      * @param request
      * @return
      */
-    private static String getActualIp(HttpServletRequest request) {
+    public static String getActualIp(HttpServletRequest request) {
         String ipAddress = request.getHeader("X-Forwarded-For");
 
         if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {

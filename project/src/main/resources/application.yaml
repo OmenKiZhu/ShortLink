@@ -31,7 +31,7 @@ short-link:
   goto-domain:
     white-list:
       enable: true
-      names: '拿个offer,知乎,掘金,博客园'
+      names: '拿个offer,知乎,掘金,博客园,西南交通大学,百度,github'
       details:
         - nageoffer.com
         - zhihu.com

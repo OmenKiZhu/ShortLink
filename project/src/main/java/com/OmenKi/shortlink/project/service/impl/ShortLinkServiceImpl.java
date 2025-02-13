@@ -208,7 +208,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                 .favicon(hasShortLink.getFavicon())
                 .createType(hasShortLink.getCreateType())
                 .build();
-        if (Objects.equals(requestParam.getGid(), requestParam.getGid()))
+        if (Objects.equals(hasShortLink.getGid(), requestParam.getGid()))
         {
             LambdaUpdateWrapper<ShortLinkDO> updateWrapper = Wrappers.lambdaUpdate(ShortLinkDO.class)
                     .eq(ShortLinkDO::getFullShortUrl, requestParam.getFullShortUrl())
@@ -225,14 +225,20 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                     .eq(ShortLinkDO::getGid, hasShortLink.getGid())
                     .eq(ShortLinkDO::getDelFlag, 0)
                     .eq(ShortLinkDO::getEnableStatus, 0);
-
-
             int delete = baseMapper.delete(updateWrapper);
             shortLinkDO.setGid(requestParam.getGid());
             baseMapper.insert(shortLinkDO);
         }
 
-
+        if (!Objects.equals(hasShortLink.getValidDateType(), requestParam.getValidDateType())
+                || !Objects.equals(hasShortLink.getValidDate(), requestParam.getValidDate())) {
+            stringRedisTemplate.delete(String.format(GOTO_SHORT_LINK_KEY, requestParam.getFullShortUrl()));
+            if (hasShortLink.getValidDate() != null && hasShortLink.getValidDate().before(new Date())) {
+                if (Objects.equals(requestParam.getValidDateType(), ValiDateTypeEnum.PERMANENT.getType()) || requestParam.getValidDate().after(new Date())) {
+                    stringRedisTemplate.delete(String.format(GOTO_IS_NULL_SHORT_LINK_KEY, requestParam.getFullShortUrl()));
+                }
+            }
+        }
 
 
 

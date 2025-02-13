@@ -11,6 +11,7 @@ import cn.hutool.http.HttpUtil;
 import com.OmenKi.shortlink.project.common.convention.exception.ClientException;
 import com.OmenKi.shortlink.project.common.convention.exception.ServiceException;
 import com.OmenKi.shortlink.project.common.enums.ValiDateTypeEnum;
+import com.OmenKi.shortlink.project.config.GotoDomainWhiteListConfiguration;
 import com.OmenKi.shortlink.project.dao.entity.*;
 import com.OmenKi.shortlink.project.dao.mapper.*;
 import com.OmenKi.shortlink.project.dto.biz.ShortLinkStatsRecordDTO;
@@ -91,6 +92,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
     private final LinkStatsTodayMapper linkStatsTodayMapper;
     private final LinkStatsTodayService linkStatsTodayService;
     private final DelayShortLinkStatsProducer delayShortLinkStatsProducer;
+    private final GotoDomainWhiteListConfiguration gotoDomainWhiteListConfiguration;
 
     @Value("${short-link.stats.locale.amap-key}")
     private String statsLocaleAmapKey;
@@ -99,6 +101,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
     private String createShortLinkDefaultDomain;
     @Override
     public ShortLinkCreateRespDTO createShortLink(ShortLinkCreateReqDTO requestParam) {
+        verificationWhitelist(requestParam.getOriginUrl());
         //产生链接的后缀
         String shortLinkSuffix = generateSuffix(requestParam);
 
@@ -204,6 +207,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void updateShortLink(ShortLinkUpdateReqDTO requestParam) {
+        verificationWhitelist(requestParam.getOriginUrl());
         //做一个查询 先用原始gid查
         LambdaQueryWrapper<ShortLinkDO> queryWrapper = Wrappers.lambdaQuery(ShortLinkDO.class)
                 .eq(ShortLinkDO::getFullShortUrl, requestParam.getFullShortUrl())
@@ -630,6 +634,21 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
             log.error("短链接访问量统计异常", ex);
         } finally {
             rLock.unlock();
+        }
+    }
+
+    private void verificationWhitelist(String originUrl) {
+        Boolean enable = gotoDomainWhiteListConfiguration.getEnable();
+        if (enable == null || !enable) {
+            return;
+        }
+        String domain = LinkUtil.extractDomain(originUrl);
+        if (StrUtil.isBlank(domain)) {
+            throw new ClientException("跳转链接填写错误");
+        }
+        List<String> details = gotoDomainWhiteListConfiguration.getDetails();
+        if (!details.contains(domain)) {
+            throw new ClientException("演示环境为避免恶意攻击，请生成以下网站跳转链接：" + gotoDomainWhiteListConfiguration.getNames());
         }
     }
 

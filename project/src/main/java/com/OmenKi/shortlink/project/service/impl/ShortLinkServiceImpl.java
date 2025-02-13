@@ -888,7 +888,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
             originUrl += System.currentTimeMillis(); //后面加上毫秒数 将布隆冲突的概率降到最低
             shortUri= HashUtil.hashToBase62(originUrl);
 
-            if(!shortUriCreateCachePenetrationBloomFilter.contains(requestParam.getDomain() + "/" + shortUri))
+            if(!shortUriCreateCachePenetrationBloomFilter.contains(createShortLinkDefaultDomain + "/" + shortUri))
             {
                 break;
             }

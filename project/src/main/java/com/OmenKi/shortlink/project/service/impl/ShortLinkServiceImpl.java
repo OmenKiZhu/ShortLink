@@ -904,21 +904,10 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
     private String getFavicon(String url) {
         URL targetUrl = new URL(url);
         HttpURLConnection connection = (HttpURLConnection) targetUrl.openConnection();
-        connection.setInstanceFollowRedirects(false);
         connection.setRequestMethod("GET");
         connection.connect();
         int responseCode = connection.getResponseCode();
-        if (responseCode == HttpURLConnection.HTTP_MOVED_PERM || responseCode == HttpURLConnection.HTTP_MOVED_TEMP) {
-            String redirectUrl = connection.getHeaderField("Location");
-            if (redirectUrl != null) {
-                URL newUrl = new URL(redirectUrl);
-                connection = (HttpURLConnection) newUrl.openConnection();
-                connection.setRequestMethod("GET");
-                connection.connect();
-                responseCode = connection.getResponseCode();
-            }
-        }
-        if (responseCode == HttpURLConnection.HTTP_OK) {
+        if (HttpURLConnection.HTTP_OK == responseCode) {
             Document document = Jsoup.connect(url).get();
             Element faviconLink = document.select("link[rel~=(?i)^(shortcut )?icon]").first();
             if (faviconLink != null) {

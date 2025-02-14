@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.UUID;
 import com.OmenKi.shortlink.admin.common.convention.exception.ClientException;
+import com.OmenKi.shortlink.admin.common.convention.exception.ServiceException;
 import com.OmenKi.shortlink.admin.dao.entity.UserDO;
 import com.OmenKi.shortlink.admin.dao.mapper.UserMapper;
 import com.OmenKi.shortlink.admin.dto.req.UserLoginReqDTO;
@@ -121,7 +122,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
 
         UserDO userDO = baseMapper.selectOne(loginWrapper);
         if(userDO == null) {
-            throw new ClientException("用户不存在");
+            throw new ServiceException("用户不存在");
         }
         Boolean hasLogin = stringRedisTemplate.hasKey("login_" + userDO.getUsername());
         Map<Object ,Object> hasLoginMap = stringRedisTemplate.opsForHash().entries("login_" + requestParam.getUsername());

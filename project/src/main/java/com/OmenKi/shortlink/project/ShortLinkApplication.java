@@ -3,12 +3,14 @@ package com.OmenKi.shortlink.project;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 /**
  * @Author: Masin_Zhu
  * @Date: 2024/11/14
  * @Description:
  */
+@EnableDiscoveryClient
 @SpringBootApplication
 @MapperScan("com.OmenKi.shortlink.project.dao.mapper")
 public class ShortLinkApplication {

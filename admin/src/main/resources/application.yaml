@@ -2,6 +2,8 @@ server:
   port: 8002
 
 spring:
+  application:
+    name: short-link-admin
   datasource:
       # ShardingSphere 对 Driver 自定义，实现分库分表等隐藏逻辑
       driver-class-name: org.apache.shardingsphere.driver.ShardingSphereDriver
@@ -16,6 +18,11 @@ spring:
     filter:
       expected-elements: 100000000
       false-positive-probability: 0.001
+  cloud:
+    nacos:
+      config:
+        discovery:
+          server-addr: 127.0.0.1:8848
 
 mybatis-plus:
   configuration:

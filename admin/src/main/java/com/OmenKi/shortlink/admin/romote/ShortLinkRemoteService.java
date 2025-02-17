@@ -22,7 +22,6 @@ import java.util.Map;
  * @Date: 2025/1/7
  * @Description: 短链接中台远程调用服务
  */
-
 public interface ShortLinkRemoteService {
     /**
      * 创建短链接

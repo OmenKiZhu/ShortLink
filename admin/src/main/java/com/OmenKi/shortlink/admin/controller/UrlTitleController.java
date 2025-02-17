@@ -1,6 +1,7 @@
 package com.OmenKi.shortlink.admin.controller;
 
 import com.OmenKi.shortlink.admin.common.convention.result.Result;
+import com.OmenKi.shortlink.admin.romote.ShortLinkActualRemoteService;
 import com.OmenKi.shortlink.admin.romote.ShortLinkRemoteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class UrlTitleController {
+    private final ShortLinkActualRemoteService shortLinkActualRemoteService;
     //TODO 后续重构为open feign 调用
     ShortLinkRemoteService shortLinkRemoteService = new ShortLinkRemoteService(){
     };
@@ -25,7 +27,7 @@ public class UrlTitleController {
      */
     @GetMapping("/api/short-link/admin/v1/title")
     public Result<String> getTitleByUrl(@RequestParam("url") String url) {
-        return shortLinkRemoteService.getTitleByUrl(url);
+        return shortLinkActualRemoteService.getTitleByUrl(url);
     }
 
 }

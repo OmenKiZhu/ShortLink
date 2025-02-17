@@ -3,7 +3,7 @@ package com.OmenKi.shortlink.admin.service;
 import com.OmenKi.shortlink.admin.common.convention.result.Result;
 import com.OmenKi.shortlink.admin.romote.dto.req.ShortLinkRecycleBinPageReqDTO;
 import com.OmenKi.shortlink.admin.romote.dto.resp.ShortLinkPageRespDTO;
-import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 /**
  * @Author: Masin_Zhu
@@ -16,5 +16,5 @@ public interface RecycleBinService {
      * @param requestParam
      * @return
      */
-    Result<IPage<ShortLinkPageRespDTO>> pageRecycleBinShortLink(ShortLinkRecycleBinPageReqDTO requestParam);
+    Result<Page<ShortLinkPageRespDTO>> pageRecycleBinShortLink(ShortLinkRecycleBinPageReqDTO requestParam);
 }

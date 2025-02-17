@@ -130,13 +130,8 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
             shortLinkGotoMapper.insert(shortLinkGotoDO);
         }catch (DuplicateKeyException e) {
             //TODO 已经误判的短链接如何处理 ---> 查库
-            LambdaQueryWrapper<ShortLinkDO> queryWrapper = Wrappers.lambdaQuery(ShortLinkDO.class)
-                    .eq(ShortLinkDO::getFullShortUrl, fullShortLink);
-            ShortLinkDO hasShortLinkDO = baseMapper.selectOne(queryWrapper);
-            if(hasShortLinkDO != null) {
                 log.warn("短链接:{} 重复入库", fullShortLink);
-                throw new ServiceException("短链接生成重复");
-            }
+                throw new ServiceException(String.format("短链接：%s 生成重复", fullShortLink));
         }
         //短连接缓存预热
         log.info("短链接:{} 预热中---", fullShortLink);
@@ -892,7 +887,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                 throw new ServiceException("经过布隆过滤器---短链接频繁生成，请稍后再试");
             }
             String originUrl = requestParam.getOriginUrl();
-            originUrl += System.currentTimeMillis(); //后面加上毫秒数 将布隆冲突的概率降到最低
+            originUrl += UUID.randomUUID().toString(); //后面加上毫秒数 将布隆冲突的概率降到最低
             shortUri= HashUtil.hashToBase62(originUrl);
 
             if(!shortUriCreateCachePenetrationBloomFilter.contains(createShortLinkDefaultDomain + "/" + shortUri))

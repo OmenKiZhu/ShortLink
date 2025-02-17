@@ -1,8 +1,11 @@
 package com.OmenKi.shortlink.project.mq.consumer;
 
+import com.OmenKi.shortlink.project.common.convention.exception.ServiceException;
 import com.OmenKi.shortlink.project.dto.biz.ShortLinkStatsRecordDTO;
+import com.OmenKi.shortlink.project.mq.idempotent.MessageQueueIdempotentHandler;
 import com.OmenKi.shortlink.project.service.ShortLinkService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RBlockingDeque;
 import org.redisson.api.RDelayedQueue;
 import org.redisson.api.RedissonClient;
@@ -21,9 +24,11 @@ import static com.OmenKi.shortlink.project.common.constants.RedisKeyConstant.DEL
  */
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class DelayShortLinkStatsConsumer implements InitializingBean {
     private final RedissonClient redissonClient;
     private final ShortLinkService shortLinkService;
+    private final MessageQueueIdempotentHandler messageQueueIdempotentHandler;
 
     public void onMessage() {
         // 创建一个新的单线程执行器，并通过匿名内部类自定义线程属性
@@ -58,7 +63,20 @@ public class DelayShortLinkStatsConsumer implements InitializingBean {
                             ShortLinkStatsRecordDTO statsRecord = delayedQueue.poll();
                             if (statsRecord != null) {
                                 // 如果获取到，则调用 shortLinkService.shortLinkStats 处理这条消息
-                                shortLinkService.shortLinkStats(null, null, statsRecord);
+                                if (!messageQueueIdempotentHandler.isMessageProcessed(statsRecord.getKeys())) {
+                                    // 判断当前的这个消息流程是否执行完成
+                                    if (messageQueueIdempotentHandler.isAccomplish(statsRecord.getKeys())) {
+                                        return;
+                                    }
+                                    throw new ServiceException("消息未完成流程，需要消息队列重试");
+                                }
+                                try {
+                                    shortLinkService.shortLinkStats(null, null, statsRecord);
+                                } catch (Throwable ex) {
+                                    messageQueueIdempotentHandler.delMessageProcessed(statsRecord.getKeys());
+                                    log.error("延迟记录短链接监控消费异常", ex);
+                                }
+                                messageQueueIdempotentHandler.setAccomplish(statsRecord.getKeys());
                                 continue;
                             }
                             // 如果没有消息，则让当前线程等待500毫秒

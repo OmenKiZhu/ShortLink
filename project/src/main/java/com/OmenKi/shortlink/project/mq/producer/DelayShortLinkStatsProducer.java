@@ -1,5 +1,6 @@
 package com.OmenKi.shortlink.project.mq.producer;
 
+import cn.hutool.core.lang.UUID;
 import com.OmenKi.shortlink.project.dto.biz.ShortLinkStatsRecordDTO;
 import lombok.RequiredArgsConstructor;
 import org.redisson.api.RBlockingDeque;
@@ -27,6 +28,9 @@ public class DelayShortLinkStatsProducer {
      * @param statsRecord 短链接统计实体参数
      */
     public void send(ShortLinkStatsRecordDTO statsRecord) {
+
+        statsRecord.setKeys(UUID.fastUUID().toString());
+
         // 从Redisson客户端获取或创建一个名为 DELAY_QUEUE_STATS_KEY 的阻塞双端队列（BlockingDeque）。
         RBlockingDeque<ShortLinkStatsRecordDTO> blockingDeque = redissonClient.getBlockingDeque(DELAY_QUEUE_STATS_KEY);
 

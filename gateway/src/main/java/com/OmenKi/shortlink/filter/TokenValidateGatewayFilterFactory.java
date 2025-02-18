@@ -66,10 +66,14 @@ public class TokenValidateGatewayFilterFactory extends AbstractGatewayFilterFact
                     return bufferFactory.wrap(JSON.toJSONString(resultMessage).getBytes());
                 }));
             }
+
+            // 将请求传递给下一个过滤器或最终的目标服务。这是实现过滤器链的关键机制。
+            // 如果当前过滤器是链中的最后一个，则调用 chain.filter(exchange) 将直接转发请求到目标服务。
             return chain.filter(exchange);
         };
     }
 
+    // 注册用户为白名单 post
     private boolean isPathInWhiteList(String requestPath, String requestMethod, List<String> whitePathList) {
         return (!CollectionUtils.isEmpty(whitePathList) && whitePathList.stream().anyMatch(requestPath::startsWith)) || (Objects.equals(requestPath, "/api/short-link/admin/v1/user") && Objects.equals(requestMethod, "POST"));
     }

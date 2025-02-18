@@ -128,6 +128,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         //Boolean hasLogin = stringRedisTemplate.hasKey("short-link:login:" + userDO.getUsername());
         Map<Object ,Object> hasLoginMap = stringRedisTemplate.opsForHash().entries(USER_LOGIN_KEY + requestParam.getUsername());
         if (CollUtil.isNotEmpty(hasLoginMap)) {
+            stringRedisTemplate.expire(USER_LOGIN_KEY + requestParam.getUsername(), 30L, TimeUnit.MINUTES);
             String token = hasLoginMap.keySet().stream()
                     .findFirst()
                     .map(Object::toString)
@@ -142,7 +143,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
          *  key: token标识
          *  val: JSON字符串（用户信息）
          */
-        // 2.可以查到 存储到redis
         String uuid = UUID.randomUUID().toString();
         stringRedisTemplate.opsForHash().put(USER_LOGIN_KEY + userDO.getUsername(), uuid, JSON.toJSONString(userDO));
         stringRedisTemplate.expire(USER_LOGIN_KEY + userDO.getUsername(),30L, TimeUnit.MINUTES);
